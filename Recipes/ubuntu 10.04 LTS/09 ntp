@@ -1,0 +1,13 @@
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//install ntp (Network Time Protocol)
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+sudo apt-get install ntp ntpdate
+
+sudo vi /etc/ntp.conf
+
+/* edit */
+# You do need to talk to an NTP server or two (or three).
+server ntp.ubuntu.com
+server pool.ntp.org
+/* end edit */

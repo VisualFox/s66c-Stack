@@ -1,0 +1,56 @@
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+//iptables
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+@see http://www.netfilter.org/
+
+sudo apt-get install iptables
+
+//Secure the firewall
+sudo vi /etc/iptables.rules
+
+/* copy and paste */
+*filter
+# Allow loopback (lo0) traffic and drop all traffic to 127/8 that doesn't use the lo0 interface
+-A INPUT -i lo -j ACCEPT
+-A INPUT ! -i lo -d 127.0.0.0/8 -j REJECT
+# Accept established inbound connections
+-A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+# Allow all outbound traffic
+-A OUTPUT -j ACCEPT
+# Allow HTTP and HTTPS connections
+-A INPUT -p tcp --dport 80 -j ACCEPT
+-A INPUT -p tcp --dport 443 -j ACCEPT
+# Allow SSH/SFTP
+# Change the value 22 if you are using a non-standard port
+-A INPUT -p tcp -m state --state NEW --dport 22 -j ACCEPT
+# Allow FTP
+# Purely optional, but required for WordPress to install its own plugins or update itself.
+-A INPUT -p tcp -m state --state NEW --dport 21 -j ACCEPT
+# Allow PING
+# Again, optional. Some disallow this altogether.
+-A INPUT -p icmp -m icmp --icmp-type 8 -j ACCEPT
+# Reject ALL other inbound
+-A INPUT -j REJECT
+-A FORWARD -j REJECT
+COMMIT
+/* end copy and paste */
+
+sudo iptables-restore < /etc/iptables.rules
+sudo iptables-save < /etc/iptables.rules
+
+//make sure theyÕre saved and reloaded at bootup:
+sudo vi /etc/network/interfaces
+
+/* edit */
+auto lo
+iface lo inet loopback
+pre-up iptables-restore < /etc/iptables.rules
+address 127.0.0.1
+netmask 255.0.0.0
+broadcast 127.255.255.255
+up ip route replace 127.0.0.0/8 dev lo
+/* end edit */
+
+sudo /etc/init.d/networking restart

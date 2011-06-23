@@ -1,0 +1,51 @@
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//apt update and upgrade
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+@see http://wiki.debian.org/Apt
+
+sudo apt-get update
+sudo apt-get upgrade
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//preparation
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+@see http://packages.debian.org/squeeze/build-essential
+
+sudo apt-get install build-essential
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//making life easier
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+@see http://packages.debian.org/squeeze/aptitude
+
+sudo apt-get install aptitude
+
+@see http://sysv-rc-conf.sourceforge.net/
+
+sudo apt-get install sysv-rc-conf
+
+@see http://en.wikipedia.org/wiki/Apt-file
+
+sudo apt-get install apt-file
+sudo apt-file update
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//optional
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+//set services
+sudo sysv-rc-conf
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//install locales
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+@see http://packages.debian.org/squeeze/locales
+
+//install locales
+sudo aptitude install locales
+
+sudo dpkg-reconfigure locales

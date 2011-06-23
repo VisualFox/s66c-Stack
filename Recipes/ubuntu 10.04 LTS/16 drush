@@ -1,0 +1,22 @@
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//install drush
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+@see http://drupal.org/project/drush
+
+cd /usr/local/share/
+sudo wget http://ftp.drupal.org/files/projects/drush-6.x-3.3.tar.gz
+sudo tar zxvf drush-6.x-3.3.tar.gz 
+sudo rm drush-6.x-3.3.tar.gz 
+sudo ln -s /usr/local/share/drush/drush /usr/local/bin/drush
+sudo drush
+
+//install drush make
+cd /usr/local/share/drush/commands
+sudo drush dl drush_make
+sudo mv ~/.drush/drush_make ./
+
+//install drush extras
+cd /usr/local/share/drush/commands
+sudo drush dl drush_extras
+sudo mv ~/.drush/drush_extras ./

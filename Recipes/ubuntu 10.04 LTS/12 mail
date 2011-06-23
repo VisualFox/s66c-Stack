@@ -1,0 +1,24 @@
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//install postfix
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+sudo aptitude install postfix
+sudo dpkg-reconfigure postfix
+
+//follow the wizard: in our case "local only"
+
+//edit the main config and check if everything is correct (mydestination)
+sudo vi /etc/postfix/main.cf
+
+//comment out the local directive
+sudo vi /etc/postfix/master.cf
+
+/* edit */
+#local     unix  -       n       n       -       -       local
+/* end edit  */
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//install getmail
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+sudo aptitude install getmail4

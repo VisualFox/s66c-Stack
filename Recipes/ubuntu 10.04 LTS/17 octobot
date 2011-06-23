@@ -1,0 +1,201 @@
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//install octobot
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+@see http://octobot.taco.cat/
+
+//create installation folder
+cd /etc
+sudo wget http://octobot.taco.cat/downloads/octobot.alpha3.tar.gz
+sudo tar -xzf octobot.alpha3.tar.gz
+sudo rm -f octobot.alpha3.tar.gz
+
+//add additional jar to the jar directory
+@see https://github.com/VisualFox/octotwitter -> octotwitter.jar
+@see http://www.mysql.com/products/connector/ -> mysql-connector-java-5.1.15-bin.jar
+@see https://github.com/mongodb/mongo-java-driver/downloads -> mongo-2.5.jar
+@see http://twitter4j.org/en/index.html -> twitter4j-core-2.2.0.jar
+@see http://code.google.com/p/serialized-php-parser/ -> serialized-php-parser-0.3.jar
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+//create init.d script
+sudo touch /etc/init.d/octobot
+sudo chmod +x /etc/init.d/octobot
+sudo vi /etc/init.d/octobot
+
+/* copy and paste */
+#!/bin/sh -e
+# Starts, stops, restarts, and get status for octobot
+
+OCTOBOT_DIR=/etc/octobot
+OCTOBOT_JAR=/etc/octobot/jar
+
+JVM_OPTS="-server -DconfigFile=$OCTOBOT_DIR/octobot.yml -Dlog4j.configuration=$OCTOBOT_DIR/log4j.properties"
+
+CLASSPATH="$(set $OCTOBOT_JAR/*.jar; IFS=:; echo "$*")"
+
+EXECUTABLE="com.urbanairship.octobot.Octobot"
+JAVA="/usr/bin/java"
+
+case $1 in
+    start)
+        pid=`/bin/ps -Af | /bin/grep $EXECUTABLE | /bin/grep -v /bin/grep | /usr/bin/awk '{print $2}'`
+        if [ "$pid" != "" ]; then
+                echo "Octobot is running"
+        else
+                echo "Launching Octobot...\n"
+                mkdir -p /var/log/octobot;
+                $JAVA $JVM_OPTS -cp "$CLASSPATH" $EXECUTABLE &
+        fi
+        ;;
+    stop)
+        pid=`/bin/ps -Af | /bin/grep $EXECUTABLE | /bin/grep -v /bin/grep | /usr/bin/awk '{print $2}'`
+        if [ "$pid" != "" ]; then
+                echo "Stopping Octobot... "
+                kill -9 $pid
+        else
+                echo "Octobot is not running"
+        fi
+        ;;
+    restart)
+        $0 stop
+        sleep 1
+        $0 start
+        ;;
+    status)
+        pid=`/bin/ps -Af | /bin/grep $EXECUTABLE | /bin/grep -v /bin/grep | /usr/bin/awk '{print $2}'`
+        if [ "$pid" != "" ]; then
+                echo "Octobot is running. pid: $pid"
+        else
+                echo "Octobot is not running. pid: $pid"
+        fi
+        ;;
+    debug)
+        echo "Launching Octobot...\n"
+        $JAVA $JVM_OPTS -cp "$CLASSPATH" $EXECUTABLE &
+        ;;
+    *)
+        echo "Usage $0 start|stop|restart|status|debug"
+        exit 1
+        ;;
+esac
+/* end copy and paste */
+
+//change starting order order
+sudo update-rc.d -f octobot remove
+sudo update-rc.d octobot defaults 70
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//setup log4j
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+sudo vi /etc/octobot/log4j.properties
+
+/* copy and paste */
+# Set root logger level to DEBUG and its only appender to A1.#log4j.rootLogger=DEBUG, A1
+
+# A1 is set to be a ConsoleAppender.
+#log4j.appender.A1=org.apache.log4j.ConsoleAppender
+
+# A1 uses PatternLayout.
+#log4j.appender.A1.layout=org.apache.log4j.PatternLayout
+#log4j.appender.A1.layout.ConversionPattern=%-4r [%t] %-5p %c %x - %m%n
+
+log4j.rootLogger=INFO, file
+
+log4j.appender.file=org.apache.log4j.RollingFileAppender
+log4j.appender.file.append=true
+log4j.appender.file.File=/var/log/octobot/octobot.log
+log4j.appender.file.MaxFileSize=5MB
+log4j.appender.file.maxBackupIndex=10
+log4j.appender.file.layout=org.apache.log4j.PatternLayout
+log4j.appender.file.layout.ConversionPattern=%-4r [%t] %-5p %c %x - %m%n
+/* end copy and paste */
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//create octobot.yml file to use with scc6 and octotwitter
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+//folder used to store twitter account information
+sudo mkdir -p /etc/octobot/twitter
+
+sudo touch /etc/octobot/octobot.yml
+sudo vi /etc/octobot/octobot.yml
+
+/* copy and paste */
+Octobot:
+  queues:
+   - { name: twitter,
+       protocol: Redis,
+       host: localhost,
+       port: 6379,
+       priority: 1,
+       workers: 1
+     }
+  
+  email_enabled: false
+  
+  startup_hook: me.l1k3.octobot.twitter.StartupHook
+  shutdown_hook: me.l1k3.octobot.twitter.ShutdownHook
+
+octotwitter:
+  tasks: "DirectMessageToListUser:DirectMessage:UpdateStatus"
+
+octotwitter_factory:
+  storage: "MemoryStorage"
+  providers: "TaskProvider:StorageProvider:PropertyProvider:SettingsProvider"
+  default_consumer_key: "xxxxxxxxxxxxxxxxxxxxxxxx"
+  default_consumer_secret: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+
+octotwitter_redis_storage:
+  host: localhost
+  port: 6379
+  prefix: "OctoTwitter:Redis:Storage:"
+
+octotwitter_mongodb_storage:
+  host: localhost
+  port: 27017
+  db: "foo"
+  collection: "storage"
+  user: ""
+  password: ""
+  index_twitter_screen_name: "screen_name"
+
+octotwitter_property_provider:
+  path: "/etc/octobot/twitter"
+
+octotwitter_redis_provider:
+  host: localhost
+  port: 6379
+  prefix: "OctoTwitter:Redis:Provider:"
+
+octotwitter_mongodb_provider:
+  host: localhost
+  port: 27017
+  db: "foo"
+  collection: "provider"
+  user: ""
+  password: ""
+  index_twitter_screen_name: "screen_name"
+
+octotwitter_mysql_provider:
+  host: localhost
+  port: 3306
+  db: "foo"
+  user: "bar"
+  password: "xxxxxxxxxxxxxxxxxxx"
+  table: "twitter_account"
+  field_twitter_screen_name: "screen_name"
+  field_consumer_key: ""
+  field_consumer_secret: ""
+  field_access_token: "oauth_token"
+  field_access_token_secret: "oauth_token_secret"
+
+octotwitter_drupal_twitter_mysql_provider:
+  host: localhost
+  port: 3306
+  db: "foo"
+  user: "bar"
+  password: "xxxxxxxxxxxxxxxxxxx"
+/* end copy and paste */

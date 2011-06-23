@@ -1,0 +1,37 @@
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//install mongodb
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+@see http://www.mongodb.org/
+
+//import key
+sudo apt-key adv --keyserver keyserver.ubuntu.com --recv 7F0CEB10 
+
+//add repository - without source so you cannot use add-apt-repository
+sudo vi /etc/apt/sources.list.d/mongo-dev-10.list
+
+/* copy and paste */
+deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen
+/* end copy and paste */
+
+sudo apt-get update
+sudo apt-get install mongodb-10gen
+
+sudo vi /etc/init/mongodb.conf
+
+/* edit */
+pre-start script
+    mkdir -p /var/lib/mongodb/
+    mkdir -p /var/log/mongodb/
+    rm -f /var/lib/mongodb/mongob.lock
+end script
+/* end edit */
+
+//install php extension for mongo
+
+sudo pecl install mongo
+sudo vi /etc/php5/conf.d/mongo.ini
+
+/* copy and paste */
+extension=mongo.so
+/* end copy and paste */

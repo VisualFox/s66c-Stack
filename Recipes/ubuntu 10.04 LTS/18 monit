@@ -1,0 +1,210 @@
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//install monit
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+@see http://mmonit.com/monit/
+
+sudo aptitude install monit
+
+//set the "startup" variable to 1 in order to allow monit to start
+sudo vi /etc/default/monit
+
+/* edit */
+# You must set this variable to for monit to start
+startup=1
+/* end edit */
+
+sudo mkdir /var/certs
+sudo vi /var/certs/monit.cnf
+
+/* copy and paste */
+RANDFILE = ./openssl.rnd
+[ req ]
+default_bits = 1024
+encrypt_key = yes
+distinguished_name = req_dn
+x509_extensions = cert_type
+
+[ req_dn ]
+countryName = Country Name (2 letter code)
+countryName_default = MO
+
+stateOrProvinceName             = State or Province Name (full name)
+stateOrProvinceName_default     = Monitoria
+
+localityName                    = Locality Name (eg, city)
+localityName_default            = Monittown
+
+organizationName                = Organization Name (eg, company)
+organizationName_default        = Monit Inc.
+
+organizationalUnitName          = Organizational Unit Name (eg, section)
+organizationalUnitName_default  = Dept. of Monitoring Technologies
+
+commonName                      = Common Name (FQDN of your server)
+commonName_default              = server.monit.mo
+
+emailAddress                    = Email Address
+emailAddress_default            = root@monit.mo
+
+[ cert_type ]
+nsCertType = server
+/* end copy and paste  */
+
+sudo openssl req -new -x509 -days 365 -nodes -config /var/certs/monit.cnf -out /var/certs/monit.pem -keyout /var/certs/monit.pem
+
+sudo chmod 666 /var/certs/monit.pem
+
+sudo openssl gendh 512 >> /var/certs/monit.pem
+sudo openssl x509 -subject -dates -fingerprint -noout -in /var/certs/monit.pem
+sudo chmod 700 /var/certs/monit.pem
+
+sudo rm -f /etc/monit/monitrc
+sudo vi /etc/monit/monitrc
+
+/* copy and paste */
+set daemon  120
+    with start delay 240
+
+set logfile /var/log/monit.log
+
+set mailserver localhost,
+
+set mail-format { from: p@w3t3ll.me }
+set mail-format { Subject: Oh! Hi! -- $EVENT $SERVICE }
+
+set alert p@l1k3.me
+
+set httpd port 2812 and
+    use address 127.0.0.1
+    #SSL ENABLE
+    #PEMFILE  /var/certs/monit.pem
+    allow admin:monit
+
+include /etc/monit/conf.d/*
+/* end copy and paste */
+
+sudo vi /etc/init/monit.conf
+
+/* copy and paste */
+# This is an event.d (upstart) script to keep monit running# To install disable the old way of doing things:
+#
+#   /etc/init.d/monit stop && update-rc.d -f monit remove
+#
+# then put this script here: /etc/init/monit.conf
+#
+# You can manually start and stop monit like this:
+#
+# start monit
+# stop monit
+#
+# Philippe Blanc (http://www.visualfox.me)
+# Karim Ratib (http://thereisamoduleforthat.com)
+# Michael Hale (http://halethegeek.com)
+# Martin Pala (http://www.mmonit.com)
+# George Ornbo (http://shapeshed.com)
+
+
+start on runlevel [2345]
+stop on runlevel [06]
+
+expect daemon
+respawn
+
+exec /usr/sbin/monit -Ic /etc/monit/monitrc
+
+pre-stop exec /usr/sbin/monit -c /etc/monitrc quit
+/* end copy and paste */
+
+//remove monit from init.d
+sudo update-rc.d -f monit remove
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+sudo vi /etc/monit/conf.d/cron.conf
+
+/* copy and paste */
+check process cron with pidfile /var/run/crond.pid   group system
+   start program = "/sbin/start cron"
+   stop  program = "/sbin/stop cron"
+   if 5 restarts within 5 cycles then timeout
+/* end copy and paste */
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+sudo vi /etc/monit/conf.d/sshd.conf
+
+/* copy and paste */
+check process sshd with pidfile /var/run/sshd.pid   start program  "/sbin/start ssh"
+   stop program  "/sbin/stop ssh"
+   if failed port 22 protocol ssh with timeout 15 seconds then restart
+   if 5 restarts within 5 cycles then timeout
+/* end copy and paste */
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+sudo vi /etc/monit/conf.d/nginx.conf
+
+/* copy and paste */
+check process nginx with pidfile /var/run/nginx.pid  start program = "/etc/init.d/nginx start"
+  stop program  = "/etc/init.d/nginx stop"
+  group www-data
+/* end copy and paste */
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+sudo vi /etc/monit/conf.d/mysqld.conf
+
+/* copy and paste */
+check process mysql with pidfile /var/run/mysqld/mysqld.pid  group database
+  start program = "/sbin/start mysql"
+  stop program = "/sbin/stop mysql"
+  if failed host 127.0.0.1 port 3306 with timeout 15 seconds then restart
+  if 5 restarts within 5 cycles then timeout
+/* end copy and paste */
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+sudo vi /etc/monit/conf.d/redis.conf
+
+/* copy and paste */
+check process redis with pidfile /var/run/redis.pid  start program = "/etc/init.d/redis start"
+  stop program = "/etc/init.d/redis stop"
+  if failed host 127.0.0.1 port 6379 with timeout 15 seconds then restart
+  if 5 restarts within 5 cycles then timeout
+/* end copy and paste */
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+sudo vi /etc/monit/conf.d/mongodb.conf
+
+/* copy and paste */
+check process mongodb with pidfile /var/lib/mongodb/mongod.lock   group database
+   start program = "/sbin/start mongodb"
+   stop  program = "/sbin/stop mongodb"
+   if failed host 127.0.0.1 port 28017 protocol http
+     and request "/" with timeout 15 seconds then restart
+   if 5 restarts within 5 cycles then timeout
+/* end copy and paste */
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+sudo vi /etc/monit/conf.d/ntp.conf
+
+/* copy and paste */
+check process ntpd with pidfile /var/run/ntpd.pid   start program = "/etc/init.d/ntp start"
+   stop  program = "/etc/init.d/ntp stop"
+   if failed host 127.0.0.1 port 123 type udp with timeout 15 seconds then alert
+   if 5 restarts within 5 cycles then timeout
+/* end copy and paste */
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+sudo vi /etc/monit/conf.d/octobot.conf
+
+/* copy and paste */
+check process octobot with pidfile /var/run/octobot.pid  start program = "/etc/init.d/octobot start"
+  stop program = "/etc/init.d/octobot stop"
+  if failed host 127.0.0.1 port 1228 type tcp with timeout 15 seconds then restart
+  if 5 restarts within 5 cycles then timeout
+/* end copy and paste */
