@@ -1,0 +1,445 @@
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//install nginx
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+@see http://nginx.org/
+
+//create document root
+sudo mkdir /var/www
+//install nginx
+sudo apt-get install nginx
+//start nginx
+sudo service nginx start
+
+//test and reload
+//sudo nginx -t && sudo nginx -s reload
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+sudo vi /etc/nginx/nginx.conf
+
+/* edit */
+user www-data;
+worker_processes  1;
+
+error_log  /var/log/nginx/error.log;
+pid        /var/run/nginx.pid;
+
+events {
+    worker_connections  1024;
+    # multi_accept on;
+}
+
+http {
+    include       /etc/nginx/mime.types;
+    default_type application/octet-stream;
+    access_log  /var/log/nginx/access.log;
+
+    sendfile        on;
+    #tcp_nopush     on;
+
+    #keepalive_timeout  0;
+    keepalive_timeout  65;
+    tcp_nodelay        on;
+
+    # if client sends stuff larger than this, it gets 413 error
+    client_max_body_size 100m;
+
+    gzip  on;
+    gzip_proxied any;
+    gzip_types text/plain text/css application/x-javascript text/xml application/xml application/xml+rss text/javascript;
+    gzip_disable "MSIE [1-6]\.(?!.*SV1)";
+
+    include /etc/nginx/conf.d/*.conf;
+    include /etc/nginx/sites-enabled/*;
+}
+/* end edit */
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+sudo vi /etc/nginx/eth1
+
+/* copy and paste */
+listen 192.168.56.101:80;
+/* end copy and paste */
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+sudo vi /etc/nginx/auth
+
+/* copy and paste */
+auth_basic "-";
+auth_basic_user_file /etc/nginx/password/htpasswd;
+/* end copy and paste */
+
+sudo mkdir /etc/nginx/password
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+sudo vi /etc/nginx/drupal
+
+/* copy and paste */
+  include /etc/nginx/drupal_common;
+  include /etc/nginx/drupal_boost;
+
+  # only a few php files are allowed, this increases the overall server security
+  location ~* ^/(index|boost_stats|cron|xmlrpc).php$ {
+    include /etc/nginx/fastcgi;
+  }
+
+  # internal pages are protected with a simple htpasswd
+  location ~* ^/(install|update|info).php$ {
+    include /etc/nginx/auth;
+    include /etc/nginx/fastcgi;
+  }
+
+  location ~* ^.+\.php$ {
+    return 404;
+  }
+/* end copy and paste */
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+sudo vi /etc/nginx/drupal_dev
+
+/* copy and paste */
+  include /etc/nginx/drupal_common;
+  include /etc/nginx/drupal_boost;
+
+  # only a few php files are allowed, this increases the overall server security
+  location ~* ^/(index|boost_stats|cron|xmlrpc).php$ {
+    include /etc/nginx/fastcgi_dev;
+  }
+
+  # internal pages are protected with a simple htpasswd
+  location ~* ^/(install|update|memcached|apc|info).php$ {
+    include /etc/nginx/auth;
+    include /etc/nginx/fastcgi_dev;
+  }
+
+  location ~* ^.+\.php$ {
+    return 404;
+  }
+/* end copy and paste */
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+sudo vi /etc/nginx/drupal_boost
+
+/*
+  location / {
+    try_files $uri @cache;
+  }
+
+  # This will try to see if we have a boost file in place. no harm done if this is not used
+  location @cache {
+    # queries, drupal cookies, or not GET methods, all require PHP processing.
+    if ($query_string ~ ".+") {
+      return 405;
+    }
+    if ($http_cookie ~ "DRUPAL_UID" ) {
+      return 405;
+    }
+    if ($request_method !~ ^(GET|HEAD)$ ) {
+      return 405;
+    }
+    error_page 405 = @drupal;
+
+    add_header Expires "Tue, 24 Jan 1984 08:00:00 GMT";
+    add_header Cache-Control "must-revalidate, post-check=0, pre-check=0";
+    add_header X-Header "boosted";
+    try_files /cache/normal/$host${uri}_$args.html /cache/perm/$host${uri}_$args.css /cache/perm/$host${uri}_$args.js @drupal;
+  }
+/* end copy and paste */
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+sudo vi /etc/nginx/drupal_common
+
+/* copy and paste */
+  charset utf-8;
+
+  # search for already compressed files
+  gzip_static on;
+  gzip on;
+
+  # some images have no mime type
+  default_type image/jpeg;
+
+  # Buffers definition. allows of up to 260k to be passed in memory.
+  client_body_buffer_size 1m;
+  proxy_buffering on;
+  proxy_buffer_size 4k;
+  proxy_buffers 8 32k;
+
+  # 404 generated from php can be rather slow. Uncomment with care
+  #error_page 404 /index.php;
+
+  # disallow access to version control directory, but return 404, not to disclose information
+  location /.(git|hg) {
+    return 404;
+  }
+
+  # robots.txt is important for search engines
+  location /robots.txt {
+    access_log off;
+  }
+
+  # This is mostly based on Drupal's stock .htaccess
+  location ~* ^.+(\.(txt|engine|inc|info|install|module|profile|po|sh|.*sql|theme|tpl(\.php)?|xtmpl)|code-style\.pl|/Entries.*|/Repository|/Root|/Tag|/Template)$ {
+    return 404;
+  }
+
+  # serve imagecache Drupal 7+ image styles files directly or redirect to drupal if they do not exist
+  location ~* (styles|imagecache) {
+    access_log off;
+    expires 30d;
+    try_files $uri @drupal;
+  }
+
+  # serve static files directly
+  location ~* ^.+\.(jpg|jpeg|gif|css|png|js|ico|html|xml|swf|flv)$ {
+    access_log off;
+    expires 30d;
+  }
+  
+  # This rewrites pages to be sent to PHP processing
+  location @drupal {
+    index index.php;
+    if (!-e $request_filename) {
+      rewrite ^/(.*)$ /index.php?q=$1 last;
+    }
+  }
+/* end copy and paste */
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+sudo vi /etc/nginx/fastcgi
+
+/* copy and paste */
+include /etc/nginx/fastcgi_params;
+fastcgi_pass 127.0.0.1:9000;
+fastcgi_index index.php;
+fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+/* end copy and paste */
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+sudo vi /etc/nginx/fastcgi_dev
+
+/* copy and paste */
+include /etc/nginx/fastcgi_params;
+fastcgi_pass 127.0.0.1:9001;
+fastcgi_index index.php;
+fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+/* end copy and paste */
+
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+sudo vi /etc/nginx/fastcgi_params
+
+/* edit */
+fastcgi_param  QUERY_STRING       $query_string;
+fastcgi_param  REQUEST_METHOD     $request_method;
+fastcgi_param  CONTENT_TYPE       $content_type;
+fastcgi_param  CONTENT_LENGTH     $content_length;
+
+fastcgi_param  SCRIPT_NAME        $fastcgi_script_name;
+fastcgi_param  REQUEST_URI        $request_uri;
+fastcgi_param  DOCUMENT_URI       $document_uri;
+fastcgi_param  DOCUMENT_ROOT      $document_root;
+fastcgi_param  SERVER_PROTOCOL    $server_protocol;
+
+fastcgi_param  GATEWAY_INTERFACE  CGI/1.1;
+fastcgi_param  SERVER_SOFTWARE    nginx/$nginx_version;
+
+fastcgi_param  REMOTE_ADDR        $remote_addr;
+fastcgi_param  REMOTE_PORT        $remote_port;
+fastcgi_param  SERVER_ADDR        $server_addr;
+fastcgi_param  SERVER_PORT        $server_port;
+fastcgi_param  SERVER_NAME        $server_name;
+
+# PHP only, required if PHP was built with --enable-force-cgi-redirect
+fastcgi_param  REDIRECT_STATUS    200;
+
+fastcgi_connect_timeout			60;
+fastcgi_send_timeout			180;
+fastcgi_read_timeout			180;
+fastcgi_buffer_size				128k;
+fastcgi_buffers					4 256k;
+fastcgi_busy_buffers_size		256k;
+fastcgi_temp_file_write_size	256k;
+fastcgi_intercept_errors		on;
+/* end edit */
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+//add a domain manually or wait for the scc6 script
+sudo vi /etc/nginx/sites-available/foo.com
+
+/* copy and paste */
+# main production siteserver {
+  server_name www.foo.com;
+  access_log /var/log/nginx/foo.access.log main;
+  error_log  /var/log/nginx/foo.error.log warn;
+  root /var/www/vhosts/foo.com/httpdocs/app;
+  include /etc/nginx/drupal;
+}
+
+# redirect if not using www
+server {
+  server_name foo.com;
+  rewrite ^(.+)$ http://www.$host$1 permanent;
+}
+/* end copy and paste */
+
+//enable the foo.com site
+sudo ln -s /etc/nginx/sites-available/foo.com /etc/nginx/sites-enabled/foo.com
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//apc for nginx
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+sudo vi /etc/nginx/sites-available/apc
+
+/* copy and paste */
+server{
+        include /etc/nginx/eth1;
+        server_name apc.*;
+        access_log /var/log/apc.access_log;
+        error_log /var/log/apc.error_log;
+        include /etc/nginx/auth;
+
+        location / {
+          root /var/www/apc;
+          index apc.php;
+        }
+
+        location ~ \.php$ {
+            include         fastcgi_params;
+            fastcgi_pass    127.0.0.1:9000;
+            fastcgi_index   apc.php;
+            fastcgi_param   SCRIPT_FILENAME /var/www/apc$fastcgi_script_name;
+        }
+}
+/* end copy and paste */
+
+sudo vi /var/www/apc/apc.php
+
+//the apc.php script which comes with APC and should be under /usr/share/doc/php-apc/
+sudo mkdir -p /var/www/apc && sudo cp /usr/share/doc/php-apc/apc.php.gz /var/www/apc && cd /var/www/apc && sudo gunzip apc.php.gz
+
+sudo ln -s /etc/nginx/sites-available/apc /etc/nginx/sites-enabled/apc
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//phpmyadmin for nginx
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+sudo aptitude install phpmyadmin
+
+sudo vi /etc/nginx/sites-available/phpmyadmin
+
+/* copy and paste */
+server{
+        include /etc/nginx/eth1;
+        server_name my.*;
+        server_name phpmyadmin.*;
+        access_log /var/log/phpmyadmin.access_log;
+        error_log /var/log/phpmyadmin.error_log;
+        include /etc/nginx/auth;
+
+        location / {
+          root /usr/share/phpmyadmin;
+          index index.php;
+        }
+
+        location ~ \.php$ {
+            include         fastcgi_params;
+            fastcgi_pass    127.0.0.1:9000;
+            fastcgi_index   index.php;
+            fastcgi_param   SCRIPT_FILENAME /usr/share/phpmyadmin$fastcgi_script_name;
+        }
+}
+/* end copy and paste */
+
+sudo ln -s /etc/nginx/sites-available/phpmyadmin /etc/nginx/sites-enabled/phpmyadmin
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//phpMoAdmin for nginx
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+@see http://www.phpmoadmin.com/
+
+sudo vi /etc/nginx/sites-available/phpmoadmin
+
+/* copy and paste */
+server{
+        include /etc/nginx/eth1;
+        server_name mo.*;
+        server_name moadmin.*;
+        server_name phpmoadmin.*;
+        access_log /var/log/phpmoadmin.access_log;
+        error_log /var/log/phpmoadmin.error_log;
+        include /etc/nginx/auth;
+
+        location / {
+          root /var/www/phpmoadmin;
+          index moadmin.php;
+        }
+
+        location ~ \.php$ {
+            include         fastcgi_params;
+            fastcgi_pass    127.0.0.1:9000;
+            fastcgi_index   moadmin.php;
+            fastcgi_param   SCRIPT_FILENAME /var/www/phpmoadmin$fastcgi_script_name;
+        }
+}
+/* end copy and paste */
+
+sudo mkdir -p /var/www/phpmoadmin
+cd  /var/www/phpmoadmin
+sudo wget http://www.phpmoadmin.com/file/phpmoadmin.zip
+sudo unzip phpmoadmin.zip
+sudo rm -f phpmoadmin.zip
+
+sudo ln -s /etc/nginx/sites-available/phpmoadmin /etc/nginx/sites-enabled/phpmoadmin
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//phpinfo for nginx
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+sudo vi /etc/nginx/sites-available/phpinfo
+
+/* copy and paste */
+server{
+        include /etc/nginx/eth1;
+        server_name php.*;
+        server_name info.*;
+        server_name phpinfo.*;
+        access_log /var/log/phpinfo.access_log;
+        error_log /var/log/phpinfo.error_log;
+        include /etc/nginx/auth;
+
+        location / {
+          root /var/www/phpinfo;
+          index index.php;
+        }
+
+        location ~ \.php$ {
+            include         fastcgi_params;
+            fastcgi_pass    127.0.0.1:9000;
+            fastcgi_index   index.php;
+            fastcgi_param   SCRIPT_FILENAME /var/www/phpinfo$fastcgi_script_name;
+        }
+}
+/* end copy and paste */
+
+sudo mkdir -p /var/www/phpinfo
+sudo vi /var/www/phpinfo/index.php
+
+/* copy and paste */
+<?php phpinfo(); ?>
+/* end copy and paste */
+
+sudo ln -s /etc/nginx/sites-available/phpinfo /etc/nginx/sites-enabled/phpinfo

@@ -1,0 +1,17 @@
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//install perl modules
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+@see http://www.cpan.org/
+
+sudo cpan
+
+//press yes and at the prompt enter:
+o conf init urllist
+o conf commit
+exit
+
+sudo cpan YAML
+sudo cpan Text::Template
+sudo cpan String::Random
+sudo cpan File::Which

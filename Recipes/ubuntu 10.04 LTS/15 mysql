@@ -1,0 +1,74 @@
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//install mysql
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+@see http://www.mysql.com/
+
+sudo apt-get install mysql-server
+
+//this should be taken care by apt-get
+//sudo mysqladmin -u root -h localhost password 'XXX'
+
+sudo mysql_secure_installation
+
+//force the creation of a pid
+sudo vi /etc/mysql/conf.d/mysqld_pid.cnf
+
+/* copy and paste */
+[mysqld]
+pid-file = /var/run/mysqld/mysqld.pid
+/* end copy and paste */
+
+//quick mysql reference:
+//mysql> DATABASE [databasename];
+//mysql> USE [db name]; 
+//mysql> GRANT USAGE ON *.* TO [username]@localhost IDENTIFIED BY '[passwd]';
+//mysql> CREATE TABLE [tablename] ( id INT, name VARCHAR(255) );
+//mysql> INSERT INTO [tablename] ([col1], [col2], [col3]) VALUES ([valule1], [value2], [value3]);//mysql> UPDATE [tablename] SET [col1] = [value1] WHERE [condition];
+
+// remove respawn
+sudo vi /etc/init/mysql.conf
+
+/* copy and paste */
+# MySQL Service
+description     "MySQL Server"
+author          "Mario Limonciello <superm1@ubuntu.com>"
+
+start on (net-device-up
+          and local-filesystems
+          and runlevel [2345])
+stop on runlevel [016]
+
+#respawn
+
+env HOME=/etc/mysql
+umask 007
+
+# The default of 5 seconds is too low for mysql which needs to flush buffers
+kill timeout 300
+
+pre-start script
+    #Sanity checks
+    [ -r $HOME/my.cnf ]
+    [ -d /var/run/mysqld ] || install -m 755 -o mysql -g root -d /var/run/mysqld
+    # Load AppArmor profile
+    if aa-status --enabled 2>/dev/null; then
+        apparmor_parser -r /etc/apparmor.d/usr.sbin.mysqld || true
+    fi
+    LC_ALL=C BLOCKSIZE= df --portability /var/lib/mysql/. | tail -n 1 | awk '{ exit ($4<4096) }'
+end script
+
+exec /usr/sbin/mysqld
+
+post-start script
+    for i in `seq 1 30` ; do
+        /usr/bin/mysqladmin --defaults-file="${HOME}"/debian.cnf ping && {
+            exec "${HOME}"/debian-start
+            # should not reach this line
+            exit 2
+        }
+        sleep 1
+    done
+    exit 1
+end script
+/* end copy and paste */

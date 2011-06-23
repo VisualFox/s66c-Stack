@@ -1,0 +1,76 @@
+//this step will need a direct connection to the server 
+//if you already have ssh access you may no need to setup this part
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//configure hosts
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+sudo vi /etc/hosts
+
+/* copy and paste */
+127.0.0.1 localhost.localdomain localhost
+192.168.56.101 foo.com foo
+192.168.56.102 meh.com meh
+
+# The following lines are desirable for IPv6 capable hosts
+::1     localhost ip6-localhost ip6-loopback
+fe00::0 ip6-localnet
+ff00::0 ip6-mcastprefix
+ff02::1 ip6-allnodes
+ff02::2 ip6-allrouters
+/* end copy and paste */
+
+sudo vi /etc/hostname
+
+/* copy and paste */
+foo
+/* end copy and paste */
+
+sudo /etc/init.d/hostname restart
+
+//check if everything works
+hostname
+hostname -f
+
+sudo reboot
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//optional - force nic (re)installation
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+sudo rm /etc/udev/rules.d/70-persistent-net.rules
+sudo reboot 
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//optional - configuration with static IP
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+//edit interfaces
+sudo vi /etc/network/interfaces
+
+/* edit */
+# The primary network interface
+auto eth0
+#iface eth0 inet dhcp
+iface eth0 inet static
+        address 192.168.56.101
+        netmask 255.255.255.0
+        network 192.168.56.0
+        broadcast 192.168.56.255
+        gateway 192.168.1.1
+
+auto eth1
+#iface eth1 inet dhcp
+iface eth1 inet static
+        address 192.168.56.102
+        netmask 255.255.255.0
+        network 192.168.56.0
+        broadcast 192.168.56.255
+        gateway 192.168.1.1
+
+auto eth2
+iface eth2 inet dhcp
+/* end edit */
+
+//restart interfaces
+sudo /etc/init.d/networking restart
