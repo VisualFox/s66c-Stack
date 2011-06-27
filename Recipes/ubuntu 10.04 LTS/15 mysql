@@ -7,7 +7,7 @@
 sudo apt-get install mysql-server
 
 //this should be taken care by apt-get
-//sudo mysqladmin -u root -h localhost password 'XXX'
+//sudo mysqladmin -u root -h localhost password 'xxxxxxxxxxx'
 
 sudo mysql_secure_installation
 

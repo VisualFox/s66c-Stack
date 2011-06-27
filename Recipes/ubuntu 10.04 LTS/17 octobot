@@ -9,6 +9,7 @@ cd /etc
 sudo wget http://octobot.taco.cat/downloads/octobot.alpha3.tar.gz
 sudo tar -xzf octobot.alpha3.tar.gz
 sudo rm -f octobot.alpha3.tar.gz
+sudo chown -R root:root octobot
 
 //add additional jar to the jar directory
 @see https://github.com/VisualFox/octotwitter -> octotwitter.jar
@@ -114,7 +115,7 @@ log4j.appender.file.layout.ConversionPattern=%-4r [%t] %-5p %c %x - %m%n
 /* end copy and paste */
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-//create octobot.yml file to use with scc6 and octotwitter
+//create octobot.yml file to use with s66c and octotwitter
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 //folder used to store twitter account information
