@@ -1,25 +1,16 @@
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-//install perl modules
+//update installed components
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-@see http://www.cpan.org/
-
-sudo cpan
-  
-//press yes and at the cpan prompt enter:
-o conf init urllist
-o conf commit
-exit
+sudo apt-get upgrade
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-//extension needed for s66c
+//use aptitude for more complex update path
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-sudo cpan YAML
-sudo cpan Text::Template
-sudo cpan String::Random
-sudo cpan File::Which
-sudo cpan Sub::Delete
+sudo aptitude
+
+//press 'U' to select package to update and then 'g'
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 //update to a newer version of CPAN

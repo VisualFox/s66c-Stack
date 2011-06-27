@@ -22,30 +22,30 @@ sudo vi /etc/nginx/nginx.conf
 user www-data;
 worker_processes  1;
 
-error_log  /var/log/nginx/error.log;
-pid        /var/run/nginx.pid;
+error_log /var/log/nginx/error.log;
+pid /var/run/nginx.pid;
 
 events {
     worker_connections  1024;
-    # multi_accept on;
+    multi_accept on;
 }
 
 http {
-    include       /etc/nginx/mime.types;
+    include /etc/nginx/mime.types;
     default_type application/octet-stream;
-    access_log  /var/log/nginx/access.log;
+    access_log /var/log/nginx/access.log;
 
-    sendfile        on;
-    #tcp_nopush     on;
+    sendfile on;
+    tcp_nopush on;
+    tcp_nodelay off;
 
     #keepalive_timeout  0;
     keepalive_timeout  65;
-    tcp_nodelay        on;
 
     # if client sends stuff larger than this, it gets 413 error
-    client_max_body_size 100m;
+    client_max_body_size 512m;
 
-    gzip  on;
+    gzip on;
     gzip_proxied any;
     gzip_types text/plain text/css application/x-javascript text/xml application/xml application/xml+rss text/javascript;
     gzip_disable "MSIE [1-6]\.(?!.*SV1)";
@@ -443,3 +443,23 @@ sudo vi /var/www/phpinfo/index.php
 /* end copy and paste */
 
 sudo ln -s /etc/nginx/sites-available/phpinfo /etc/nginx/sites-enabled/phpinfo
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//monit for nginx
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+sudo vi /etc/nginx/sites-available/monit
+
+/* copy and paste */
+server {
+  include /etc/nginx/eth1;
+  server_name monit.*;
+  location / {
+    proxy_pass http://127.0.0.1:2812;
+    proxy_set_header Host $host;
+    include /etc/nginx/auth;
+  }
+}
+/* end copy and paste */
+
+sudo ln -s /etc/nginx/sites-available/monit /etc/nginx/sites-enabled/monit

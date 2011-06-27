@@ -17,6 +17,16 @@ git config --global user.email foobar@foo.com
 
 sudo apt-get install mercurial
 
+//hg help config
+
+vi ~/.hgrc
+
+/**/
+[ui]
+	username = Firstname Lastname <bar@foo.com>
+	verbose = True
+/**/
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 //install bazaar
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

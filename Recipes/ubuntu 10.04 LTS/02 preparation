@@ -13,7 +13,7 @@ sudo apt-get upgrade
 
 @see http://packages.debian.org/squeeze/build-essential
 
-sudo apt-get install build-essential
+sudo apt-get install build-essential openssl libssl-dev
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 //making life easier
