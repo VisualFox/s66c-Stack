@@ -10,6 +10,36 @@ sudo dpkg-reconfigure postfix
 //edit the main config and check if everything is correct (mydestination)
 sudo vi /etc/postfix/main.cf
 
+/* copy and paste */
+myorigin = /etc/mailname
+
+smtpd_banner = $myhostname ESMTP $mail_name (Ubuntu)
+biff = no
+
+append_dot_mydomain = no
+delay_warning_time = 4h
+readme_directory = no
+
+# TLS parameters
+smtpd_tls_cert_file=/etc/ssl/certs/ssl-cert-snakeoil.pem
+smtpd_tls_key_file=/etc/ssl/private/ssl-cert-snakeoil.key
+smtpd_use_tls=yes
+smtpd_tls_session_cache_database = btree:${data_directory}/smtpd_scache
+smtp_tls_session_cache_database = btree:${data_directory}/smtp_scache
+
+myhostname = foo.com
+alias_maps = hash:/etc/aliases
+alias_database = hash:/etc/aliases
+mydestination = NONE, foo.com, localhost.localdomain, localhost
+relayhost =
+mynetworks = 127.0.0.0/8
+mailbox_size_limit = 0
+recipient_delimiter = +
+inet_interfaces = loopback-only
+inet_protocols = all
+local_transport = error:local delivery is disabled
+/* end copy and paste */
+
 //comment out the local directive
 sudo vi /etc/postfix/master.cf
 

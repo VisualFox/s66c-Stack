@@ -1,5 +1,4 @@
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
 //iptables
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -27,17 +26,20 @@ sudo vi /etc/iptables.rules
 -A INPUT -p tcp --dport 80 -j ACCEPT
 -A INPUT -p tcp --dport 443 -j ACCEPT
 
+# Allow Monit HTTP on localhost
+#-A INPUT -p tcp --dport 2812 -j ACCEPT
+
 # Allow SSH/SFTP
 # Change the value 22 if you are using a non-standard port
 -A INPUT -p tcp -m state --state NEW --dport 22 -j ACCEPT
 
 # Allow FTP
 # Purely optional, but required for WordPress to install its own plugins or update itself.
--A INPUT -p tcp -m state --state NEW --dport 21 -j ACCEPT
+#-A INPUT -p tcp -m state --state NEW --dport 21 -j ACCEPT
 
 # Allow PING
 # Again, optional. Some disallow this altogether.
--A INPUT -p icmp -m icmp --icmp-type 8 -j ACCEPT
+#-A INPUT -p icmp -m icmp --icmp-type 8 -j ACCEPT
 
 # Reject ALL other inbound
 -A INPUT -j REJECT
@@ -53,6 +55,10 @@ sudo iptables-save < /etc/iptables.rules
 sudo vi /etc/network/interfaces
 
 /* edit */
+# This file describes the network interfaces available on your system
+# and how to activate them. For more information, see interfaces(5).
+
+# The loopback network interface
 auto lo
 iface lo inet loopback
 pre-up iptables-restore < /etc/iptables.rules

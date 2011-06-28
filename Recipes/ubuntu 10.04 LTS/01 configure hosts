@@ -10,7 +10,7 @@ sudo vi /etc/hosts
 /* copy and paste */
 127.0.0.1 localhost.localdomain localhost
 192.168.56.101 foo.com foo
-192.168.56.102 meh.com meh
+192.168.56.102 bar.com bar
 
 # The following lines are desirable for IPv6 capable hosts
 ::1     localhost ip6-localhost ip6-loopback
