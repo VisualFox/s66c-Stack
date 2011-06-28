@@ -31,6 +31,7 @@ sudo vi /etc/init/mysql.conf
 
 /* copy and paste */
 # MySQL Service
+
 description     "MySQL Server"
 author          "Mario Limonciello <superm1@ubuntu.com>"
 

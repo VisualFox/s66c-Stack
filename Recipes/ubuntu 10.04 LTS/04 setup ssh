@@ -8,14 +8,15 @@
 //remove respawn
 sudo vi /etc/init/ssh.conf
 
-/* edit */
-# ssh - OpenBSD Secure Shell server#
+/* copy and paste */
+# ssh - OpenBSD Secure Shell server
+#
 # The OpenSSH server provides secure shell access to the system.
 
 description     "OpenSSH server"
 
 start on filesystem
-stop on runlevel S
+stop on runlevel [!2345]
 
 #respawn
 #respawn limit 10 5
@@ -34,7 +35,7 @@ end script
 # if you used to set SSHD_OPTS in /etc/default/ssh, you can change the
 # 'exec' line here instead
 exec /usr/sbin/sshd -D
-/* end edit */
+/* end copy and paste */
 
 //Turn off root login
 sudo vi /etc/ssh/sshd_config
@@ -43,6 +44,7 @@ sudo vi /etc/ssh/sshd_config
 # Authentication:
 LoginGraceTime 120
 PermitRootLogin no
+StrictModes yes
 /* end edit */
 
 

@@ -2,7 +2,8 @@
 sudo vi /etc/init/cron.conf
 
 /* edit */
-# cron - regular background program processing daemon#
+# cron - regular background program processing daemon
+#
 # cron is a standard UNIX program that runs user-specified programs at
 # periodic scheduled times
 

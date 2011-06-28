@@ -9,6 +9,27 @@ sudo add-apt-repository ppa:nginx/php5
 
 sudo aptitude update
 
-sudo aptitude install php5-cli php5-common php5-fpm php5-cgi php-pear php-apc php5-dev php5-mysql php5-gd php5-curl
+sudo aptitude install php5-cli php5-common php5-fpm php5-cgi php-pear php-apc php5-dev php5-mysql php5-gd php5-curl php5-mcrypt
 
 sudo service php5-fpm start
+
+//remove comment starting with '#' (comments starting with '#' are deprecated)
+sudo vi /etc/php5/fpm/conf.d/mcrypt.ini
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//check php module in /etc/php5/fpm/conf.d
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+ls -l /etc/php5/fpm/conf.d
+
+apc.ini
+apc.pro.ini.disabled
+curl.ini
+gd.ini
+mcrypt.ini
+mysqli.ini
+mysql.ini
+pdo.ini
+pdo_mysql.ini
+
+//mongo.ini will be created on step "13 mongodb"

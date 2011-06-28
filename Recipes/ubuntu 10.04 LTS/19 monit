@@ -39,6 +39,8 @@ set httpd port 2812 and
 include /etc/monit/conf.d/*
 /* end copy and paste */
 
+sudo chmod 0700 /etc/monit/monitrc
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 sudo vi /etc/init/monit.conf

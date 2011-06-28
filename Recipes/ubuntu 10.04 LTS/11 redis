@@ -6,7 +6,6 @@
 
 sudo apt-get install build-essential
 
-
 wget http://redis.googlecode.com/files/redis-2.2.2.tar.gz
 tar -zxf redis-2.2.2.tar.gz
 cd redis-2.2.2 
@@ -33,7 +32,8 @@ sudo chmod +x /etc/init.d/redis
 sudo vi /etc/init.d/redis
 
 /* copy and paste */
-#! /bin/sh### BEGIN INIT INFO
+#! /bin/sh
+### BEGIN INIT INFO
 # Provides:             redis-server
 # Required-Start:       $syslog
 # Required-Stop:        $syslog
@@ -44,6 +44,7 @@ sudo vi /etc/init.d/redis
 # Short-Description:    redis-server - Persistent key-value db
 # Description:          redis-server - Persistent key-value db
 ### END INIT INFO
+
 
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 DAEMON=/usr/local/bin/redis-server
@@ -90,7 +91,7 @@ case "$1" in
         ;;
 esac
 
-exit 0 
+exit 0
 /* end copy and paste */
 
 //create redis user
@@ -106,7 +107,7 @@ vm.overcommit_memory = 1
 cd .. && sudo rm -rf redis-2.2.2 && sudo rm -f redis-2.2.2.tar.gz
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-//install redis perl modules
+//install redis perl modules extension needed for s66c
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 sudo cpan Redis

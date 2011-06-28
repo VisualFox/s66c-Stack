@@ -23,8 +23,11 @@ vi ~/.hgrc
 
 /**/
 [ui]
-	username = Firstname Lastname <bar@foo.com>
-	verbose = True
+username = firstname lastname  <bar@foo.com>
+
+[trusted]
+users = username
+groups = www-data
 /**/
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

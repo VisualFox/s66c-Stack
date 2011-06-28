@@ -11,3 +11,25 @@ blacklist i2c_piix4
 
 //Update the initramfs
 sudo update-initramfs -u -k all
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//install guess addition
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+//get the kernel name
+uname -r
+
+sudo apt-get update
+
+//change KERNELNAME to whatever uname -r returned
+sudo apt-get install build-essential linux-headers-KERNELNAME
+
+sudo mount /dev/cdrom /mnt/
+sudo /mnt/VBoxLinuxAdditions.run
+sudo umount /mnt/
+
+#cleanup...
+//change KERNELNAME to whatever uname -r returned
+sudo apt-get remove build-essential linux-headers-KERNELNAME
+sudo apt-get autoremove
+sudo apt-get autoclean
