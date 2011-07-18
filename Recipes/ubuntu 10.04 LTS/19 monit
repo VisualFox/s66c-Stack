@@ -125,7 +125,8 @@ check process mysql with pidfile /var/run/mysqld/mysqld.pid
   start program = "/sbin/start mysql"
   stop program = "/sbin/stop mysql"
   if failed host 127.0.0.1 port 3306 with timeout 15 seconds then restart
-  if 5 restarts within 5 cycles then timeout/* end copy and paste */
+  if 5 restarts within 5 cycles then timeout
+/* end copy and paste */
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 

@@ -21,14 +21,14 @@ sudo apt-get install mercurial
 
 vi ~/.hgrc
 
-/**/
+/* copy and paste */
 [ui]
 username = firstname lastname  <bar@foo.com>
 
 [trusted]
 users = username
 groups = www-data
-/**/
+/* end copy and paste */
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 //install bazaar

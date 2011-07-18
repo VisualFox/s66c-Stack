@@ -26,6 +26,12 @@ pid-file = /var/run/mysqld/mysqld.pid
 //mysql> CREATE TABLE [tablename] ( id INT, name VARCHAR(255) );
 //mysql> INSERT INTO [tablename] ([col1], [col2], [col3]) VALUES ([valule1], [value2], [value3]);//mysql> UPDATE [tablename] SET [col1] = [value1] WHERE [condition];
 
+//dump db
+//mysqldump --opt -hlocalhost -uuser -ppasswd db | gzip > db.gz
+
+//restore db
+//mysql -hlocalhost -uuser -upasswd db < db.sql
+
 // remove respawn
 sudo vi /etc/init/mysql.conf
 

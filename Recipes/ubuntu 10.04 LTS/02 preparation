@@ -7,13 +7,15 @@
 sudo apt-get update
 sudo apt-get upgrade
 
+//virtualbox 4.10: if grub configuration show up choose /dev/sda
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 //preparation
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 @see http://packages.debian.org/squeeze/build-essential
 
-sudo apt-get install build-essential openssl libssl-dev
+sudo apt-get install build-essential openssl libssl-dev python-software-properties
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 //making life easier
@@ -46,6 +48,6 @@ sudo sysv-rc-conf
 @see http://packages.debian.org/squeeze/locales
 
 //install locales
-sudo aptitude install locales
+sudo apt-get install locales
 
 sudo dpkg-reconfigure locales

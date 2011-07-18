@@ -26,7 +26,7 @@ sudo vi /etc/iptables.rules
 -A INPUT -p tcp --dport 80 -j ACCEPT
 -A INPUT -p tcp --dport 443 -j ACCEPT
 
-# Allow Monit HTTP on localhost
+# Allow Monit HTTP
 #-A INPUT -p tcp --dport 2812 -j ACCEPT
 
 # Allow SSH/SFTP

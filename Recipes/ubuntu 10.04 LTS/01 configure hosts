@@ -1,45 +1,14 @@
-//this step will need a direct connection to the server 
-//if you already have ssh access you may no need to setup this part
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-//configure hosts
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-sudo vi /etc/hosts
-
-/* copy and paste */
-127.0.0.1 localhost.localdomain localhost
-192.168.56.101 foo.com foo
-192.168.56.102 bar.com bar
-
-# The following lines are desirable for IPv6 capable hosts
-::1     localhost ip6-localhost ip6-loopback
-fe00::0 ip6-localnet
-ff00::0 ip6-mcastprefix
-ff02::1 ip6-allnodes
-ff02::2 ip6-allrouters
-/* end copy and paste */
-
-sudo vi /etc/hostname
-
-/* copy and paste */
-foo
-/* end copy and paste */
-
-sudo /etc/init.d/hostname restart
-
-//check if everything works
-hostname
-hostname -f
-
-sudo reboot
+//these steps will need a direct connection to the server 
+//if you already have ssh access you may no need to follow this recipe
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 //optional - force nic (re)installation
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 sudo rm /etc/udev/rules.d/70-persistent-net.rules
-sudo reboot 
+sudo reboot
+
+//virtualbox 4.10: have some time some issue after a machine was cloned - try to change the type of cart to intel server MT and don't forget to cycle through the MAC address
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 //optional - configuration with static IP
@@ -74,3 +43,39 @@ iface eth2 inet dhcp
 
 //restart interfaces
 sudo /etc/init.d/networking restart
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//configure hosts
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+sudo vi /etc/hosts
+
+/* copy and paste */
+127.0.0.1 localhost.localdomain localhost
+192.168.56.101 foo.com foo
+192.168.56.102 bar.com bar
+
+# The following lines are desirable for IPv6 capable hosts
+::1     localhost ip6-localhost ip6-loopback
+fe00::0 ip6-localnet
+ff00::0 ip6-mcastprefix
+ff02::1 ip6-allnodes
+ff02::2 ip6-allrouters
+/* end copy and paste */
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//set hostname
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+sudo vi /etc/hostname
+
+/* copy and paste */
+foo.com
+/* end copy and paste */
+
+sudo /etc/init.d/hostname restart
+
+//check if everything works
+hostname
+
+sudo reboot

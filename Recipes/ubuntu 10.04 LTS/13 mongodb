@@ -43,6 +43,7 @@ end script
 //install php extension for mongo
 
 sudo pecl install mongo
+
 sudo vi /etc/php5/conf.d/mongo.ini
 
 /* copy and paste */

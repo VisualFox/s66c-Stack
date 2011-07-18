@@ -9,6 +9,8 @@ sudo wget http://ftp.drupal.org/files/projects/drush-6.x-3.3.tar.gz
 sudo tar zxvf drush-6.x-3.3.tar.gz 
 sudo rm drush-6.x-3.3.tar.gz 
 sudo ln -s /usr/local/share/drush/drush /usr/local/bin/drush
+
+//test installation
 sudo drush
 
 //install drush make
@@ -20,3 +22,5 @@ sudo mv ~/.drush/drush_make ./
 cd /usr/local/share/drush/commands
 sudo drush dl drush_extras
 sudo mv ~/.drush/drush_extras ./
+
+cd ~

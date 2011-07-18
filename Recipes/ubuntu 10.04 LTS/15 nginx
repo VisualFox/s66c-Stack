@@ -6,19 +6,18 @@
 
 //create document root
 sudo mkdir /var/www
+
 //install nginx
 sudo apt-get install nginx
+
 //start nginx
 sudo service nginx start
-
-//test and reload
-//sudo nginx -t && sudo nginx -s reload
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 sudo vi /etc/nginx/nginx.conf
 
-/* edit */
+/* copy and paste */
 user www-data;
 worker_processes  1;
 
@@ -53,7 +52,7 @@ http {
     include /etc/nginx/conf.d/*.conf;
     include /etc/nginx/sites-enabled/*;
 }
-/* end edit */
+/* end copy and paste */
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -188,6 +187,12 @@ sudo vi /etc/nginx/drupal_common
   # This is mostly based on Drupal's stock .htaccess
   location ~* ^.+(\.(txt|engine|inc|info|install|module|profile|po|sh|.*sql|theme|tpl(\.php)?|xtmpl)|code-style\.pl|/Entries.*|/Repository|/Root|/Tag|/Template)$ {
     return 404;
+  }
+  
+  # serve sitemap.xml
+  location ~* sitemap.xml {
+    access_log off;
+    try_files $uri @drupal;
   }
 
   # serve imagecache Drupal 7+ image styles files directly or redirect to drupal if they do not exist
@@ -462,3 +467,15 @@ server {
 /* end copy and paste */
 
 sudo ln -s /etc/nginx/sites-available/monit /etc/nginx/sites-enabled/monit
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//test and reload nginx
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+sudo nginx -t && sudo nginx -s reload
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//optional add the group www-data to your user
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+usermod -g www-data myuser
