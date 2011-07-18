@@ -2,28 +2,52 @@
 //install php
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-sudo aptitude install python-software-properties
+sudo apt-get install python-software-properties
 
 //currently php 5.3.x doesn't include php-fpm
 sudo add-apt-repository ppa:nginx/php5
 
-sudo aptitude update
+sudo apt-get update
 
-sudo aptitude install php5-cli php5-common php5-fpm php5-cgi php-pear php-apc php5-dev php5-mysql php5-gd php5-curl php5-mcrypt
-
-sudo service php5-fpm start
+sudo apt-get install php5-cli php5-common php5-fpm php5-cgi php-pear php-apc php5-dev php5-mysql php5-gd php5-curl php5-mcrypt
 
 //remove comment starting with '#' (comments starting with '#' are deprecated)
 sudo vi /etc/php5/fpm/conf.d/mcrypt.ini
+
+sudo service php5-fpm start
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//fpm/pool.d
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+sudo vi /etc/php5/fpm/pool.d/dev.conf
+
+/* copy and paste */
+[dev]
+listen = 127.0.0.1:9001
+
+user = www-data
+group = www-data
+
+pm = dynamic
+pm.max_children = 60
+pm.start_servers = 4
+pm.min_spare_servers = 1
+pm.max_spare_servers = 10
+
+chdir = /var/www/vhosts
+
+php_flag[display_errors] = on
+php_admin_flag[log_errors] = on
+/* end copy and paste */
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 //check php module in /etc/php5/fpm/conf.d
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-ls -l /etc/php5/fpm/conf.d
+ls -l /etc/php5/conf.d
 
 apc.ini
-apc.pro.ini.disabled
 curl.ini
 gd.ini
 mcrypt.ini

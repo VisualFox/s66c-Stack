@@ -1,0 +1,29 @@
+//by default linode let you log at root
+
+//if you want or need a more standard install than the one provided by linode
+//apt-get install ubuntu-standard
+
+adduser myuser
+groupadd admin
+usermod -g admin myuser
+
+visudo
+
+/* comcat */
+%admin ALL=(ALL) ALL
+/* end comcat */
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//password less for new created user
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+sudo mkdir ~/.ssh
+
+//copy public key to ~/.ssh/authorized_keys2
+
+mkdir ~/.ssh
+vi .ssh/authorized_keys2
+
+chown -R myuser:mygroup ~/.ssh
+chmod 700 ~/.ssh
+chmod 600 ~/.ssh/authorized_keys2

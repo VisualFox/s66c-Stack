@@ -2,7 +2,7 @@
 //install postfix
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-sudo aptitude install postfix
+sudo apt-get install postfix
 sudo dpkg-reconfigure postfix
 
 //follow the wizard: in our case "local only"
@@ -46,6 +46,10 @@ sudo vi /etc/postfix/master.cf
 /* edit */
 #local     unix  -       n       n       -       -       local
 /* end edit  */
+
+sudo /etc/init.d/postfix reload
+
+//you may have to create the /etc/mailname file by hand. the content of this file should be at least the hostname for this server
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 //install getmail
