@@ -23,4 +23,9 @@ cd /usr/local/share/drush/commands
 sudo drush dl drush_extras
 sudo mv ~/.drush/drush_extras ./
 
+//instsall drush cleanup
+cd /usr/local/share/drush/commands
+sudo drush dl drush_cleanup
+sudo mv ~/.drush/drush_cleanup ./
+
 cd ~
