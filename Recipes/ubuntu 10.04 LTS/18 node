@@ -10,6 +10,41 @@ sudo apt-get update
 sudo apt-get install nodejs nodejs-dev
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//set node program as doemons
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+sudo vi /etc/init/foo.conf
+
+/* copy and paste */
+description "node.js server"
+author      "kvz - http://kevin.vanzonneveld.net"
+ 
+# used to be: start on startup
+# until we found some mounts weren't ready yet while booting:
+start on (net-device-up
+          and local-filesystems
+          and runlevel [2345])
+stop on shutdown
+ 
+# Automatically Respawn:
+# respawn
+# respawn limit 99 5
+# use monit instead
+ 
+script
+    # Not sure why $HOME is needed, but we found that it is:
+    export HOME="/root"
+ 
+    exec /usr/bin/node /var/www/vhosts/foo.bar/httpdocs/foo.js >> /var/log/node.log 2>&1
+end script
+ 
+post-start script
+   # Optionally put a script here that will notifiy you node has (re)started
+   # /root/bin/hoptoad.sh "node.js has started!"
+end script
+/* end copy and paste */
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 //Install NPM
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -31,7 +66,7 @@ curl http://npmjs.org/install.sh | sudo sh
 
 @see https://github.com/senchalabs/connect
 
-npm install connect
+sudo npm install connect
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 //Install Express
@@ -39,7 +74,7 @@ npm install connect
 
 @see https://github.com/visionmedia/express.git
 
-npm install express
+sudo npm install express
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 //Install Socket.io
@@ -47,7 +82,7 @@ npm install express
 
 @see http://socket.io/
 
-npm install socket.io
+sudo npm install socket.io
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 //Install Redis
@@ -55,7 +90,7 @@ npm install socket.io
 
 @see https://github.com/mranney/node_redis.git
 
-npm install redis
+sudo npm install redis
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 //Install mongodb
@@ -63,7 +98,7 @@ npm install redis
 
 @see https://github.com/christkv/node-mongodb-native
 
-npm install mongodb
+sudo npm install mongodb
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 //Install node-oauth
@@ -71,7 +106,7 @@ npm install mongodb
 
 @see https://github.com/ciaranj/node-oauth
 
-npm install oauth
+sudo npm install oauth
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 //Install node-drupal
@@ -79,4 +114,4 @@ npm install oauth
 
 @see https://github.com/mikl/node-drupal
 
-npm install drupal
+sudo npm install drupal

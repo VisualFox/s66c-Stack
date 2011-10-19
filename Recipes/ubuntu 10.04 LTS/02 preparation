@@ -17,6 +17,8 @@ sudo apt-get upgrade
 
 sudo apt-get install build-essential openssl libssl-dev python-software-properties
 
+sudo apt-get install openssh-server
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 //making life easier
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -33,6 +35,11 @@ sudo apt-get install sysv-rc-conf
 
 sudo apt-get install apt-file
 sudo apt-file update
+
+@see http://www.vim.org/
+
+//VIM - Vi IMproved
+sudo apt-get install vim
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 //optional

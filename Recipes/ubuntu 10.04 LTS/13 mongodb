@@ -17,6 +17,7 @@ deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen
 sudo apt-get update
 sudo apt-get install mongodb-10gen
 
+//the mongod.lock is needed by monit
 sudo vi /etc/init/mongodb.conf
 
 /* copy and paste */
