@@ -23,3 +23,9 @@ sudo cpan
 install CPAN
 reload cpan
 exit
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//update s66c script
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+sudo mv /root/s66c ~/ && cd ~/s66c && sudo git pull && cd .. && sudo mv ~/s66c /root
