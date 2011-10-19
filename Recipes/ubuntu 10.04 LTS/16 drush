@@ -13,6 +13,9 @@ sudo ln -s /usr/local/share/drush/drush /usr/local/bin/drush
 //test installation
 sudo drush
 
+//if you get the following error: "PHP safe mode is activated. Drush requires that safe mode is disabled."
+//edit your php.ini file and set safe_mode to off
+
 //install drush make
 cd /usr/local/share/drush/commands
 sudo drush dl drush_make

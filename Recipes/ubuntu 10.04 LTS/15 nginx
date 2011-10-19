@@ -56,6 +56,14 @@ http {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+sudo vi /etc/nginx/localhost
+
+/* copy and paste */
+listen localhost:80;
+/* end copy and paste */
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
 sudo vi /etc/nginx/eth1
 
 /* copy and paste */
@@ -301,6 +309,39 @@ server {
 
 //enable the foo.com site
 sudo ln -s /etc/nginx/sites-available/foo.com /etc/nginx/sites-enabled/foo.com
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//default
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+sudo vi /etc/nginx/sites-available/default
+
+/* copy and paste */
+server {
+        include /etc/nginx/localhost;
+        include /etc/nginx/eth1;
+        server_name  localhost;
+
+        access_log  /var/log/nginx/localhost.access.log;
+
+        location / {
+                root   /var/www/nginx-default;
+                index  index.html index.htm;
+        }
+
+        location /doc {
+                root   /usr/share;
+                autoindex on;
+                allow 127.0.0.1;
+                deny all;
+        }
+
+        location /images {
+                root   /usr/share;
+                autoindex on;
+        }
+}
+/* end copy and paste */
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 //apc for nginx

@@ -8,13 +8,17 @@
 sudo rm /etc/udev/rules.d/70-persistent-net.rules
 sudo reboot
 
-//virtualbox 4.10: have some time some issue after a machine was cloned - try to change the type of cart to intel server MT and don't forget to cycle through the MAC address
+//virtualbox 4.10: has some issue after a machine was cloned - try to change the type of cart to intel server MT and don't forget to cycle through the MAC address
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 //optional - configuration with static IP
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//edit interfaces
+//These configurations are designed for VirtualBox or Parallels Desktop on Mac
+//eth0 and eth1 correspond to a separate ethernet card
+//eth2 is the shared (host) network card
+
+//edit interfaces for virtualbox
 sudo vi /etc/network/interfaces
 
 /* edit */
@@ -41,8 +45,54 @@ auto eth2
 iface eth2 inet dhcp
 /* end edit */
 
+//edit interfaces for parallel
+sudo vi /etc/network/interfaces
+
+/* edit */
+# The primary network interface
+auto eth0
+#iface eth0 inet dhcp
+iface eth0 inet static
+        address 192.168.1.101
+        netmask 255.255.255.0
+        network 192.168.1.0
+        broadcast 192.168.1.255
+        gateway 192.168.1.1
+
+auto eth1
+#iface eth1 inet dhcp
+iface eth1 inet static
+        address 192.168.1.102
+        netmask 255.255.255.0
+        network 192.168.1.0
+        broadcast 192.168.1.255
+        gateway 192.168.1.1
+
+auto eth2
+iface eth2 inet dhcp
+/* end edit */
+
 //restart interfaces
 sudo /etc/init.d/networking restart
+
+//if you are using NetworkManager you may need to edit the NetworkManager.conf file and set ifupdown manged to true
+sudo vi /etc/NetworkManager/NetworkManager.conf
+
+/* edit */
+# This file is installed into /etc/NetworkManager, and is loaded by
+# NetworkManager by default.  To override, specify: '--config file'
+# during NM startup.  This can be done by appending to DAEMON_OPTS in
+# the file:
+#
+# /etc/default/NetworkManager
+#
+
+[main]
+plugins=ifupdown,keyfile
+
+[ifupdown]
+managed=true
+/* end edit */
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 //configure hosts
@@ -52,8 +102,7 @@ sudo vi /etc/hosts
 
 /* copy and paste */
 127.0.0.1 localhost.localdomain localhost
-192.168.56.101 foo.com foo
-192.168.56.102 bar.com bar
+127.0.0.1 ubuntu
 
 # The following lines are desirable for IPv6 capable hosts
 ::1     localhost ip6-localhost ip6-loopback
@@ -70,7 +119,7 @@ ff02::2 ip6-allrouters
 sudo vi /etc/hostname
 
 /* copy and paste */
-foo.com
+ubuntu
 /* end copy and paste */
 
 sudo /etc/init.d/hostname restart

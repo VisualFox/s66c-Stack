@@ -9,9 +9,9 @@ sudo apt-get install build-essential
 //check last version @ http://code.google.com/p/redis/downloads/list
 
 cd ~
-wget http://redis.googlecode.com/files/redis-2.2.11.tar.gz 
-tar -zxf redis-2.2.11.tar.gz
-cd redis-2.2.11 
+wget http://redis.googlecode.com/files/redis-2.2.14.tar.gz 
+tar -zxf redis-2.2.14.tar.gz
+cd redis-2.2.14 
 make
 
 sudo make install
@@ -107,7 +107,7 @@ vm.overcommit_memory = 1
 /* end comcat */
 
 //clean up installation file
-cd .. && sudo rm -rf redis-2.2.11 && sudo rm -f redis-2.2.11.tar.gz
+cd .. && sudo rm -rf redis-2.2.14 && sudo rm -f redis-2.2.14.tar.gz
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 //install redis perl modules extension needed for s66c
