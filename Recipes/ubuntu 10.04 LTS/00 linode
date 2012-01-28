@@ -5,7 +5,11 @@
 
 adduser myuser
 groupadd admin
-usermod -g admin myuser
+usermod -aG admin myuser
+
+groups
+
+//be sure that myuser and admin groups are present.
 
 visudo
 
@@ -14,16 +18,16 @@ visudo
 /* end comcat */
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-//password less for new created user
+//password less for new created user (logged as root)
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-sudo mkdir ~/.ssh
+cd /home/myuser
 
-//copy public key to ~/.ssh/authorized_keys2
+//copy public key to .ssh/authorized_keys2
 
-mkdir ~/.ssh
+mkdir .ssh
 vi .ssh/authorized_keys2
 
-chown -R myuser:mygroup ~/.ssh
-chmod 700 ~/.ssh
-chmod 600 ~/.ssh/authorized_keys2
+chown -R myuser:mygroup .ssh
+chmod 700 .ssh
+chmod 600 .ssh/authorized_keys2

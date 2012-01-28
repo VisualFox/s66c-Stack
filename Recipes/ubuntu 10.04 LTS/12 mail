@@ -3,7 +3,9 @@
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 sudo apt-get install postfix
-sudo dpkg-reconfigure postfix
+
+//should be handled by the installation
+//sudo dpkg-reconfigure postfix
 
 //follow the wizard: in our case "local only"
 

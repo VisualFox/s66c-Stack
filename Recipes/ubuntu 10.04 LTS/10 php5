@@ -57,3 +57,4 @@ pdo.ini
 pdo_mysql.ini
 
 //mongo.ini will be created on step "13 mongodb"
+//redis.ini will be created on step "11 redis"
