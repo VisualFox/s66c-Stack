@@ -49,10 +49,10 @@ StrictModes yes
 
 
 //Restart ssh
-sudo /etc/init.d/ssh restart
+sudo restart ssh
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-//password less
+//password less (already done if linode)
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 //copy public key to ~/.ssh/authorized_keys2

@@ -14,6 +14,7 @@ sudo sysv-rc-conf
 │ apparmor    [ ]     [ ]     [ ]     [ ]     [ ]     [ ]     [ ]     [X]  │
 │ apport      [ ]     [ ]     [ ]     [ ]     [ ]     [ ]     [ ]     [ ]  │
 │ atd         [ ]     [ ]     [ ]     [ ]     [ ]     [ ]     [ ]     [ ]  │
+│ beanstalkd  [ ]     [X]     [X]     [X]     [X]     [ ]     [ ]     [ ]  │
 │ bootlogd    [ ]     [ ]     [ ]     [ ]     [ ]     [ ]     [ ]     [ ]  │
 │ console-s$  [ ]     [ ]     [ ]     [ ]     [ ]     [ ]     [ ]     [ ]  │
 │ cron        [ ]     [ ]     [ ]     [ ]     [ ]     [ ]     [ ]     [ ]  │

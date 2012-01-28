@@ -50,8 +50,7 @@ sudo apt-get install cvs
 //install misc
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-sudo apt-get install unzip zip
-sudo apt-get install curl
+sudo apt-get install unzip zip curl
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 //install logrotate
@@ -60,8 +59,8 @@ sudo apt-get install curl
 sudo apt-get install logrotate
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-//install java
+//install java (update no necessary if octobot is not installed)
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-sudo apt-get install openjdk-6-jre-headless
+#sudo apt-get install openjdk-6-jre-headless
 

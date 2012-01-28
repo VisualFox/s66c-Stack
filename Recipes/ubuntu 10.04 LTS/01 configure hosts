@@ -1,5 +1,5 @@
 //these steps will need a direct connection to the server 
-//if you already have ssh access you may no need to follow this recipe
+//if you already have ssh access you don't need to follow this recipe
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 //optional - force nic (re)installation

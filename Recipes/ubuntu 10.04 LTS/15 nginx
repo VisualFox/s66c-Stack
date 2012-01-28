@@ -66,6 +66,8 @@ listen localhost:80;
 
 sudo vi /etc/nginx/eth1
 
+//don't forget to change the ip address
+
 /* copy and paste */
 listen 192.168.56.101:80;
 /* end copy and paste */
@@ -343,6 +345,47 @@ server {
 }
 /* end copy and paste */
 
+sudo mkdir /var/www/nginx-default
+
+sudo vi /var/www/nginx-default/index.html
+
+/* copy and paste */
+<html>
+<head>
+<title>Welcome to nginx!</title>
+</head>
+<body bgcolor="white" text="black">
+<center><h1>Welcome to nginx!</h1></center>
+</body>
+</html>
+/* end copy and paste */
+
+sudo vi /var/www/nginx-default/50x.html
+
+/* copy and paste */
+<html>
+<head>
+<title>The page is temporarily unavailable</title>
+<style>
+body { font-family: Tahoma, Verdana, Arial, sans-serif; }
+</style>
+</head>
+<body bgcolor="white" text="black">
+<table width="100%" height="100%">
+<tr>
+<td align="center" valign="middle">
+The page you are looking for is temporarily unavailable.<br/>
+Please try again later.
+</td>
+</tr>
+</table>
+</body>
+</html>
+/* end copy and paste */
+
+//default should be enabled by default
+//sudo ln -s /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 //apc for nginx
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -381,6 +424,8 @@ sudo ln -s /etc/nginx/sites-available/apc /etc/nginx/sites-enabled/apc
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 sudo aptitude install phpmyadmin
+
+//installer should prompt you with using dbconfig-common choose <yes>
 
 sudo vi /etc/nginx/sites-available/phpmyadmin
 
@@ -451,6 +496,42 @@ cd ~
 sudo ln -s /etc/nginx/sites-available/phpmoadmin /etc/nginx/sites-enabled/phpmoadmin
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//phpRedisAdmin for nginx
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+@see https://github.com/ErikDubbelboer/phpRedisAdmin
+
+sudo vi /etc/nginx/sites-available/redis
+
+/* copy and paste */
+server{
+        include /etc/nginx/eth1;
+        server_name redis.*;
+        access_log /var/log/phpRedisAdmin.access_log;
+        error_log /var/log/phpRedisAdmin.error_log;
+        include /etc/nginx/auth;
+
+        location / {
+          root /var/www/phpRedisAdmin;
+          index index.php;
+        }
+
+        location ~ \.php$ {
+            include         fastcgi_params;
+            fastcgi_pass    127.0.0.1:9000;
+            fastcgi_index   index.php;
+            fastcgi_param   SCRIPT_FILENAME /var/www/phpRedisAdmin$fastcgi_script_name;
+        }
+}
+/* end copy and paste */
+
+cd /var/www
+sudo git clone https://github.com/ErikDubbelboer/phpRedisAdmin.git
+cd ~
+
+sudo ln -s /etc/nginx/sites-available/redis /etc/nginx/sites-enabled/redis
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 //phpinfo for nginx
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -519,4 +600,8 @@ sudo nginx -t && sudo nginx -s reload
 //optional add the group www-data to your user
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-usermod -g www-data myuser
+sudo usermod -aG www-data myuser
+
+groups
+
+//be sure that myuser, admin and www-data groups are present.

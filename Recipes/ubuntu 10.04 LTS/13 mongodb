@@ -41,7 +41,9 @@ script
 end script
 /* end copy and paste */
 
-//install php extension for mongo
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//install php extension for mongodb
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 sudo pecl install mongo
 
@@ -50,3 +52,6 @@ sudo vi /etc/php5/conf.d/mongo.ini
 /* copy and paste */
 extension=mongo.so
 /* end copy and paste */
+
+//restart php
+sudo /etc/init.d/php5-fpm restart

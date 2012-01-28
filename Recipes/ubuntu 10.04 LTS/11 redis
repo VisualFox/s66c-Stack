@@ -110,8 +110,24 @@ vm.overcommit_memory = 1
 cd .. && sudo rm -rf redis-2.2.14 && sudo rm -f redis-2.2.14.tar.gz
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-//install redis perl modules extension needed for s66c
+//install php extension for redis
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-sudo cpan Redis
-//this will take a while...
+cd ~
+sudo git clone https://github.com/nicolasff/phpredis.git
+cd phpredis
+sudo phpize
+sudo ./configure
+sudo make && make install
+sudo cd ..
+sudo rm -rf phpredis
+
+sudo vi /etc/php5/conf.d/redis.ini
+
+/* copy and paste */
+extension=redis.so
+/* end copy and paste */
+
+//restart php
+sudo /etc/init.d/php5-fpm restart
+

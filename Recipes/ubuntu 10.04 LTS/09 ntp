@@ -12,7 +12,7 @@ server ntp.ubuntu.com
 server pool.ntp.org
 /* end edit */
 
-//or depending on your installation
+//or depending on your installation (10.04 vs 11.04)
 
 /* edit */
 # Use servers from the NTP Pool Project. Approved by Ubuntu Technical Board
