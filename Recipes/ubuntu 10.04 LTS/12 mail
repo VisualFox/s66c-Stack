@@ -53,6 +53,12 @@ sudo /etc/init.d/postfix reload
 
 //you may have to create the /etc/mailname file by hand. the content of this file should be at least the hostname for this server
 
+sudo vi /etc/mailname
+
+/* copy and paste */
+foo.com
+/* end copy and paste */
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 //install getmail
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
