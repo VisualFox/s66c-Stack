@@ -24,25 +24,25 @@ sudo vi /etc/network/interfaces
 /* edit */
 # The primary network interface
 auto eth0
-#iface eth0 inet dhcp
-iface eth0 inet static
+iface eth0 inet dhcp
+
+auto eth1
+#iface eth1 inet dhcp
+iface eth1 inet static
         address 192.168.56.101
         netmask 255.255.255.0
         network 192.168.56.0
         broadcast 192.168.56.255
         gateway 192.168.1.1
 
-auto eth1
-#iface eth1 inet dhcp
-iface eth1 inet static
+auto eth2
+#iface eth2 inet dhcp
+iface eth2 inet static
         address 192.168.56.102
         netmask 255.255.255.0
         network 192.168.56.0
         broadcast 192.168.56.255
         gateway 192.168.1.1
-
-auto eth2
-iface eth2 inet dhcp
 /* end edit */
 
 //edit interfaces for parallel
@@ -51,25 +51,25 @@ sudo vi /etc/network/interfaces
 /* edit */
 # The primary network interface
 auto eth0
-#iface eth0 inet dhcp
-iface eth0 inet static
+iface eth0 inet dhcp
+
+auto eth1
+#iface eth1 inet dhcp
+iface eth1 inet static
         address 192.168.1.101
         netmask 255.255.255.0
         network 192.168.1.0
         broadcast 192.168.1.255
         gateway 192.168.1.1
 
-auto eth1
-#iface eth1 inet dhcp
-iface eth1 inet static
+auto eth2
+#iface eth2 inet dhcp
+iface eth2 inet static
         address 192.168.1.102
         netmask 255.255.255.0
         network 192.168.1.0
         broadcast 192.168.1.255
         gateway 192.168.1.1
-
-auto eth2
-iface eth2 inet dhcp
 /* end edit */
 
 //restart interfaces
