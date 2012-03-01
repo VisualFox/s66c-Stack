@@ -5,7 +5,7 @@
 sudo apt-get install python-software-properties
 
 //currently php 5.3.x doesn't include php-fpm
-sudo add-apt-repository ppa:nginx/php5
+sudo add-apt-repository ppa:nginx/php5.3
 
 sudo apt-get update
 
