@@ -32,10 +32,6 @@ sudo service php5-fpm start
 //fpm/pool.d
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-/*
-
-*/
-
 sudo vi /etc/php5/fpm/pool.d/www.conf
 
 /*edit*/
@@ -68,6 +64,17 @@ pm.min_spare_servers = 5
 ; Note: Mandatory when pm is set to 'dynamic'
 pm.max_spare_servers = 35
 /*end edit*/
+
+/*
+The dev pool is only needed during development.
+
+This pool will be called by nginx:
+/etc/nginx/drupal_dev
+/etc/nginx/fastcgi_dev
+
+By setting php_flag[display_errors] and php_admin_flag[log_errors] this pool let you access to php error message.
+To not use in production!
+*/
 
 sudo vi /etc/php5/fpm/pool.d/dev.conf
 
