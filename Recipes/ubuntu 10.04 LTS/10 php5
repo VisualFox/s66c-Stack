@@ -5,7 +5,19 @@
 sudo apt-get install python-software-properties
 
 //currently php 5.3.x doesn't include php-fpm
-sudo add-apt-repository ppa:nginx/php5.3
+//sudo add-apt-repository ppa:nginx/php5
+//sudo add-apt-repository ppa:nginx/php5.3
+
+/*
+NOTE: with the release of php5.4 the ppa:nginx/php5 and ppa:nginx/php5.3 are discontinued
+@see https://launchpad.net/~brianmercer/+archive/php
+You can either try php5.4 (untested with drupal 7) or use brianmercer ppa
+
+to remove previous ppa:
+sudo add-apt-repository -r ppa:nginx/php5.3
+*/
+
+sudo add-apt-repository ppa:brianmercer/php
 
 sudo apt-get update
 
@@ -20,6 +32,43 @@ sudo service php5-fpm start
 //fpm/pool.d
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+/*
+
+*/
+
+sudo vi /etc/php5/fpm/pool.d/www.conf
+
+/*edit*/
+; Note: This value is mandatory.
+pm = dynamic
+
+; The number of child processes to be created when pm is set to 'static' and the
+; maximum number of child processes when pm is set to 'dynamic' or 'ondemand'.
+; This value sets the limit on the number of simultaneous requests that will be
+; served. Equivalent to the ApacheMaxClients directive with mpm_prefork.
+; Equivalent to the PHP_FCGI_CHILDREN environment variable in the original PHP
+; CGI. The below defaults are based on a server without much resources. Don't
+; forget to tweak pm.* to fit your needs.
+; Note: Used when pm is set to 'static', 'dynamic' or 'ondemand'
+; Note: This value is mandatory.
+pm.max_children = 50
+
+; The number of child processes created on startup.
+; Note: Used only when pm is set to 'dynamic'
+; Default Value: min_spare_servers + (max_spare_servers - min_spare_servers) / 2
+pm.start_servers = 20
+
+; The desired minimum number of idle server processes.
+; Note: Used only when pm is set to 'dynamic'
+; Note: Mandatory when pm is set to 'dynamic'
+pm.min_spare_servers = 5
+
+; The desired maximum number of idle server processes.
+; Note: Used only when pm is set to 'dynamic'
+; Note: Mandatory when pm is set to 'dynamic'
+pm.max_spare_servers = 35
+/*end edit*/
+
 sudo vi /etc/php5/fpm/pool.d/dev.conf
 
 /* copy and paste */
@@ -30,10 +79,10 @@ user = www-data
 group = www-data
 
 pm = dynamic
-pm.max_children = 60
-pm.start_servers = 4
-pm.min_spare_servers = 1
-pm.max_spare_servers = 10
+pm.max_children = 50
+pm.start_servers = 20
+pm.min_spare_servers = 5
+pm.max_spare_servers = 35
 
 chdir = /var/www/vhosts
 
