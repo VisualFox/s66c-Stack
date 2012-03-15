@@ -10,14 +10,11 @@ sudo apt-get install python-software-properties
 
 /*
 NOTE: with the release of php5.4 the ppa:nginx/php5 and ppa:nginx/php5.3 are discontinued
-@see https://launchpad.net/~brianmercer/+archive/php
+@see https://launchpad.net/~brianmercer/+archive/php5
 You can either try php5.4 (untested with drupal 7) or use brianmercer ppa
-
-to remove previous ppa:
-sudo add-apt-repository -r ppa:nginx/php5.3
 */
 
-sudo add-apt-repository ppa:brianmercer/php
+sudo add-apt-repository ppa:brianmercer/php5
 
 sudo apt-get update
 
