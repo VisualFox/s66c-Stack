@@ -4,31 +4,34 @@
 
 @see http://drupal.org/project/drush
 
-cd /usr/local/share/
-sudo wget http://ftp.drupal.org/files/projects/drush-6.x-3.3.tar.gz
-sudo tar zxvf drush-6.x-3.3.tar.gz 
-sudo rm drush-6.x-3.3.tar.gz 
-sudo ln -s /usr/local/share/drush/drush /usr/local/bin/drush
+sudo pear channel-discover pear.drush.org
+//sudo pear install drush/drush
+//specific drush 5 version
+pear install drush/drush-5.0.0
 
-//test installation
-sudo drush
+/*
+from the drush site:
+Use sudo to overcome permission problems. If the channel-discover fails, try running the following sequence of commands:
+
+sudo pear upgrade --force Console_Getopt
+sudo pear upgrade --force pear
+sudo pear upgrade-all
+*/
 
 //if you get the following error: "PHP safe mode is activated. Drush requires that safe mode is disabled."
 //edit your php.ini file and set safe_mode to off
 
-//install drush make
-cd /usr/local/share/drush/commands
-sudo drush dl drush_make
-sudo mv ~/.drush/drush_make ./
+//list available drush packages: 
+sudo pear remote-list -c drush
 
-//install drush extras
-cd /usr/local/share/drush/commands
-sudo drush dl drush_extras
-sudo mv ~/.drush/drush_extras ./
+//drush should be installed at: /usr/share/php/drush
+
+/*
+at this time drush_cleanup is not ported to drupal 7
 
 //instsall drush cleanup
-cd /usr/local/share/drush/commands
+cd /usr/share/php/drush/commands
 sudo drush dl drush_cleanup
 sudo mv ~/.drush/drush_cleanup ./
-
 cd ~
+*/
