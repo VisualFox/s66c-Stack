@@ -7,7 +7,7 @@
 sudo pear channel-discover pear.drush.org
 //sudo pear install drush/drush
 //specific drush 5 version
-pear install drush/drush-5.0.0
+sudo pear install drush/drush-5.0.0
 
 /*
 from the drush site:
