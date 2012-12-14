@@ -1,0 +1,68 @@
+sudo apt-get install php5 php5-cli php5-common php5-fpm php-pear php5-mysql php5-gd php5-curl php5-mcrypt
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//APC
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+#Ubuntu version is not uptodate let's use pecl
+#sudo apt-get install php-apc
+
+sudo apt-get install make libpcre3-dev php-pear
+sudo pecl install apc
+
+//to update apc
+
+sudo pecl upgrade apc
+
+//or
+
+cd /usr/local/src
+sudo wget http://pecl.php.net/get/APC-3.1.13.tgz
+sudo tar -zxvf APC-3.1.13.tgz
+cd APC-3.1.13
+sudo phpize
+sudo ./configure
+sudo make && sudo make install
+sudo make test
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//fpm/pool.d
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+sudo vi /etc/php5/fpm/pool.d/dev.conf
+
+/* copy and paste */
+[dev]
+listen = 127.0.0.1:9001
+
+user = www-data
+group = www-data
+
+pm = dynamic
+pm.max_children = 50
+pm.start_servers = 20
+pm.min_spare_servers = 5
+pm.max_spare_servers = 35
+
+chdir = /var/www/vhosts
+
+php_flag[display_errors] = on
+php_admin_flag[log_errors] = on
+/* end copy and paste */
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//check php module in /etc/php5/fpm/conf.d
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+ls -l /etc/php5/conf.d
+
+apc.ini
+curl.ini
+gd.ini
+mcrypt.ini
+mysqli.ini
+mysql.ini
+pdo.ini
+pdo_mysql.ini
+
+//redis.ini will be created on step "redis"

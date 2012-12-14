@@ -1,0 +1,8 @@
+sudo apt-get install php-pear
+sudo pear channel-discover pear.drush.org
+sudo pear install drush/drush
+sudo drush
+
+cd ~/.drush and run:
+sudo chown -R $USER ./
+sudo chgrp -R $USER ./

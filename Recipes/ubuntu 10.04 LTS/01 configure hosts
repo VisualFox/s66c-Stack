@@ -45,7 +45,7 @@ iface eth2 inet static
         gateway 192.168.1.1
 /* end edit */
 
-//edit interfaces for parallel
+//edit interfaces for parallel desktop
 sudo vi /etc/network/interfaces
 
 /* edit */
@@ -102,7 +102,7 @@ sudo vi /etc/hosts
 
 /* copy and paste */
 127.0.0.1 localhost.localdomain localhost
-127.0.0.1 ubuntu
+127.0.0.1 ubuntu.localdomain ubuntu
 
 # The following lines are desirable for IPv6 capable hosts
 ::1     localhost ip6-localhost ip6-loopback

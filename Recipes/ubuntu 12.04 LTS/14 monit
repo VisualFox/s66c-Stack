@@ -1,0 +1,117 @@
+@see http://mmonit.com/monit/
+
+sudo apt-get install monit
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+sudo rm -f /etc/monit/monitrc
+sudo vi /etc/monit/monitrc
+
+/* copy and paste */
+set daemon  60
+	with start delay 480
+
+set logfile /var/log/monit.log
+
+set mailserver localhost port 25 with timeout 15 seconds
+
+set mail-format { from: bar@foo.com }
+set mail-format { Subject: Oh! Hi! -- $EVENT $SERVICE }
+
+set alert bar@foo.com
+
+set httpd port 2812 and
+    use address localhost
+    allow localhost
+
+include /etc/monit/conf.d/*
+/* end copy and paste */
+
+sudo chmod 0700 /etc/monit/monitrc
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+sudo vi /etc/monit/conf.d/system.conf
+
+/* copy and paste */
+check system localhost.localdomain
+    if loadavg (1min) > 4 then alert
+    if loadavg (5min) > 2 then alert
+    if memory usage > 75% then alert
+    if swap usage > 25% then alert
+    if cpu usage (user) > 70% then alert
+    if cpu usage (system) > 30% then alert
+    if cpu usage (wait) > 20% then alert
+/* end copy and paste */
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+sudo vi /etc/monit/conf.d/cron.conf
+
+/* copy and paste */
+check process cron with pidfile /var/run/crond.pid
+   group system
+   start program = "/sbin/start cron"
+   stop  program = "/sbin/stop cron"
+   if 5 restarts within 5 cycles then timeout
+/* end copy and paste */
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+sudo vi /etc/monit/conf.d/nginx.conf
+
+/* copy and paste */
+check process nginx with pidfile /var/run/nginx.pid
+  start program = "/etc/init.d/nginx start"
+  stop program  = "/etc/init.d/nginx stop"
+  group www-data
+/* end copy and paste */
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+sudo vi /etc/monit/conf.d/mysqld.conf
+
+/* copy and paste */
+check process mysql with pidfile /var/run/mysqld/mysqld.pid
+  group database
+  start program = "/sbin/start mysql"
+  stop program = "/sbin/stop mysql"
+  if failed host 127.0.0.1 port 3306 with timeout 15 seconds then restart
+  if 5 restarts within 5 cycles then timeout
+/* end copy and paste */
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+sudo vi /etc/monit/conf.d/redis.conf
+
+/* copy and paste */
+check process redis with pidfile /var/run/redis/redis-server.pid
+  start program = "/etc/init.d/redis-server start"
+  stop program = "/etc/init.d/redis-server stop"
+  if failed host 127.0.0.1 port 6379 with timeout 15 seconds then restart
+  if 5 restarts within 5 cycles then timeout
+/* end copy and paste */
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//monit for nginx
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+sudo vi /etc/nginx/sites-available/monit
+
+/* copy and paste */
+server {
+  include /etc/nginx/eth1;
+  server_name monit.*;
+  location / {
+    proxy_pass http://127.0.0.1:2812;
+    proxy_set_header Host $host;
+    include /etc/nginx/auth;
+  }
+}
+/* end copy and paste */
+
+sudo ln -s /etc/nginx/sites-available/monit /etc/nginx/sites-enabled/monit
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+sudo service monit restart

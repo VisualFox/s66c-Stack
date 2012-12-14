@@ -1,0 +1,18 @@
+sudo apt-get install munin munin-node
+
+sudo vi /etc/nginx/sites-available/munin
+
+/*start edit*/
+server{
+        include /etc/nginx/eth1;
+        server_name munin.*;
+        access_log /var/log/munin.access_log;
+        error_log /var/log/munin.error_log;
+        include /etc/nginx/auth;
+
+        location / {
+          root /var/cache/munin/www;
+          index index.html;
+        }
+}
+/*end edit*/

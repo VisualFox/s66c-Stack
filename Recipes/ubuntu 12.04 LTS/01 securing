@@ -1,0 +1,38 @@
+#Firewall - UFW
+
+sudo apt-get install ufw
+sudo ufw enable
+
+sudo ufw allow ssh
+sudo ufw allow http
+sudo ufw allow https
+
+sudo ufw status
+
+- - - - - - - - - - - - - - - - - - - -
+
+#Secure shared memory
+
+sudo vi /etc/fstab
+
+/* concat */
+tmpfs     /dev/shm     tmpfs     defaults,noexec,nosuid     0     0
+/* end concat */
+
+- - - - - - - - - - - - - - - - - - - -
+
+#SSH
+
+sudo vi /etc/ssh/ssh_config
+
+/* edit */
+Protocol 2
+PermitRootLogin no
+/* end edit */
+
+- - - - - - - - - - - - - - - - - - - -
+
+#vi arrow keys working as a b c d (desktop vesion)
+
+cp /etc/vim/vimrc ~/.vimrc
+

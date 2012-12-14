@@ -1,0 +1,57 @@
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//hostname - taken from Linode: @see http://library.linode.com/getting-started
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+You'll need to set your system's hostname and fully qualified domain name (FQDN). 
+Your hostname should be something unique. Some people name their servers after planets, philosophers, or animals. 
+Note that the system's hostname has no relationship to websites or email services hosted on it, 
+aside from providing a name for the system itself. Your hostname should not be "www" or anything too generic.
+
+Enter following commands to set the hostname, replacing plato with the hostname of your choice:
+
+echo "plato" > /etc/hostname
+hostname -F /etc/hostname
+
+If it exists, edit the file /etc/default/dhcpcd to comment out the SET_HOSTNAME directive:
+
+File excerpt:/etc/default/dhcpcd
+
+#SET_HOSTNAME='yes'
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//hosts - taken from Linode: @see http://library.linode.com/getting-started
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Next, edit your /etc/hosts file to resemble the following example, replacing plato with your chosen hostname, example.com
+with your system's domain name, and 12.34.56.78 with your system's IP address. As with the hostname, 
+the domain name part of your FQDN does not necesarily need to have any relationship to websites 
+or other services hosted on the server (although it may if you wish). 
+As an example, you might host "www.something.com" on your server, but the system's FQDN might be "mars.somethingelse.com."
+
+File:/etc/hosts
+
+127.0.0.1        localhost.localdomain    localhost
+127.0.0.1 		 foo.localdomain 		  foo
+12.34.56.78      plato.example.com        plato
+
+If you have IPv6 enabled on your Linode, you will also want to add an entry for your IPv6 address, as shown in this example:
+
+File:/etc/hosts
+
+127.0.0.1                       localhost.localdomain    localhost
+127.0.0.1 		 				foo.localdomain 		 foo
+12.34.56.78                     plato.example.com        plato
+::1     foo  localhost6.localdomain6  localhost6
+2600:3c01::a123:b456:c789:d012  plato.example.com        plato
+
+# The following lines are desirable for IPv6 capable hosts
+::1     localhost ip6-localhost ip6-loopback
+fe00::0 ip6-localnet
+ff00::0 ip6-mcastprefix
+ff02::1 ip6-allnodes
+ff02::2 ip6-allrouters
+ff02::3 ip6-allhosts
+
+The value you assign as your system's FQDN should have an "A" record in DNS pointing to your Linode's IPv4 address. 
+For server with IPv6 enabled, you should also set up a "AAAA" record in DNS pointing to your server's IPv6 address.
+

@@ -1,0 +1,24 @@
+sudo apt-get install redis-server
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//install php extension for redis
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+sudo apt-get install php5-dev
+
+cd ~
+sudo git clone git://github.com/nicolasff/phpredis.git
+cd phpredis
+sudo phpize
+sudo ./configure
+sudo make && sudo make install
+cd .. && sudo rm -rf phpredis
+
+sudo vi /etc/php5/conf.d/redis.ini
+
+/* copy and paste */
+extension=redis.so
+/* end copy and paste */
+
+//restart php
+sudo /etc/init.d/php5-fpm restart

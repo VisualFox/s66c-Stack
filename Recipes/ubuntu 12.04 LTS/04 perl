@@ -1,0 +1,30 @@
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//install perl modules
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+@see http://www.cpan.org/
+
+sudo cpan
+#if you don't have write permission for Perl library directories use sudo
+#press yes and at the cpan prompt enter:
+
+#automatic yes answers to prerequisites module
+o conf prerequisites_policy follow
+o conf commit
+
+#configure the url list
+o conf init urllist
+#answer questions...
+o conf commit
+exit
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//update to a newer version of CPAN (if needed)
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+sudo cpan
+
+//at the cpan prompt
+install CPAN
+reload cpan
+exit

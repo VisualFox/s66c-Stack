@@ -1,0 +1,25 @@
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//mail send only - taken from Linode: 
+//@see http://library.linode.com/email/exim/send-only-mta-ubuntu-11.04-natty
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+sudo apt-get install exim4-daemon-light mailutils
+
+sudo dpkg-reconfigure exim4-config
+
+#01 - choose "internet site; mail is send and received directly from SMTP"
+#02 - enter your fully qualified domain name (hostname -f)
+#03 - IP addresses - 127.0.0.1; ::1
+#04 - list your fully qualified domain name, hostname, and localhost: "foo.localdomain; foo; localhost.localdomain; localhost"
+#05 - "Domains to relay mail for" - leave blank
+#06 - "Machines to relay mail for" - leave blank
+#07 - "keep DNS queries to a minimum" - no
+#08 - mbox
+#09 - non-split
+#10 - enter main email address - someone@example.com
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// Testing
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+echo "This is a test." | mail -s Testing someone@example.com

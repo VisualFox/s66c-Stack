@@ -1,0 +1,23 @@
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//update installed components
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+sudo apt-get update
+sudo apt-get upgrade
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//update to a newer version of CPAN
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+sudo cpan
+
+//at the cpan prompt
+install CPAN
+reload cpan
+exit
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//update s66c script
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+sudo mv /root/s66c ~/ && cd ~/s66c && sudo git pull && cd .. && sudo mv ~/s66c /root

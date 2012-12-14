@@ -1,0 +1,40 @@
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//perl extension needed for s66c
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+sudo cpan YAML
+sudo cpan URI
+sudo cpan Text::Template
+sudo cpan String::Random
+sudo cpan File::Which
+sudo cpan Sub::Delete
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//install s66c
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+@see https://github.com/VisualFox/s66c
+
+sudo git clone git://github.com/VisualFox/s66c.git /root/s66c
+sudo chmod +x /root/s66c/s66c.pl
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//add s66c alias
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+cd ~/
+vi .bash_aliases
+
+/* copy and paste */
+alias s66c='sudo /root/s66c/s66c.pl'
+
+echo
+echo
+echo '*************************************************'
+echo
+echo 's66c is your friend'
+echo
+echo '*************************************************'
+echo
+echo
+/* end copy and paste */
