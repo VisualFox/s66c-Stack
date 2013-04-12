@@ -3,6 +3,6 @@ sudo pear channel-discover pear.drush.org
 sudo pear install drush/drush
 sudo drush
 
-cd ~/.drush and run:
+cd ~/.drush
 sudo chown -R $USER ./
 sudo chgrp -R $USER ./

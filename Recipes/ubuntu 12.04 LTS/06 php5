@@ -1,4 +1,4 @@
-sudo apt-get install php5 php5-cli php5-common php5-fpm php-pear php5-mysql php5-gd php5-curl php5-mcrypt
+sudo apt-get install php5 php5-dev php5-cli php5-common php5-fpm php-pear php5-mysql php5-gd php5-curl php5-mcrypt
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 //APC
@@ -29,26 +29,14 @@ sudo make test
 //fpm/pool.d
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-sudo vi /etc/php5/fpm/pool.d/dev.conf
+cd /etc/php5/fpm
+sudo rm -rf pool.d
+sudo git clone https://github.com/VisualFox/php5-fpm-pool.git
+sudo ln -s php5-fpm-pool pool.d
+cd ~
 
-/* copy and paste */
-[dev]
-listen = 127.0.0.1:9001
-
-user = www-data
-group = www-data
-
-pm = dynamic
-pm.max_children = 50
-pm.start_servers = 20
-pm.min_spare_servers = 5
-pm.max_spare_servers = 35
-
-chdir = /var/www/vhosts
-
-php_flag[display_errors] = on
-php_admin_flag[log_errors] = on
-/* end copy and paste */
+#for log
+sudo mkdir /var/log/fpm-php
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 //check php module in /etc/php5/fpm/conf.d
@@ -66,3 +54,16 @@ pdo.ini
 pdo_mysql.ini
 
 //redis.ini will be created on step "redis"
+
+//if apc.ini is missing
+//You should add "extension=apc.so" to php.ini
+
+sudo vi /etc/php5/conf.d/apc.ini
+
+/* copy and paste */
+extension=apc.so
+/* end copy and paste */
+
+
+//restart php
+sudo /etc/init.d/php5-fpm restart

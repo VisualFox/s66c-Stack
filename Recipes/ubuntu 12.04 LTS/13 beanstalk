@@ -19,7 +19,7 @@ START=yes
 /* end edit */
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-//install beanstalk
+//install beanstalkv for node
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 @see https://github.com/benlund/node-beanstalk-client
@@ -27,7 +27,7 @@ START=yes
 sudo npm install beanstalk_client
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-//install beanstalk
+//install beanstalk for node
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 @see https://github.com/benlund/node-beanstalk-worker

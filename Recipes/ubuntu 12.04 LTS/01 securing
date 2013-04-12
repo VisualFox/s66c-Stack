@@ -23,7 +23,7 @@ tmpfs     /dev/shm     tmpfs     defaults,noexec,nosuid     0     0
 
 #SSH
 
-sudo vi /etc/ssh/ssh_config
+sudo vi /etc/ssh/sshd_config
 
 /* edit */
 Protocol 2

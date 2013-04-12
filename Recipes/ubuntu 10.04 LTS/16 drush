@@ -4,10 +4,13 @@
 
 @see http://drupal.org/project/drush
 
+//list available drush packages: 
+sudo pear remote-list -c drush
+
 sudo pear channel-discover pear.drush.org
 //sudo pear install drush/drush
 //specific drush 5 version
-sudo pear install drush/drush-5.0.0
+sudo pear install drush/drush-5.8.0
 
 /*
 from the drush site:
@@ -21,9 +24,6 @@ sudo pear upgrade-all
 //if you get the following error: "PHP safe mode is activated. Drush requires that safe mode is disabled."
 //edit your php.ini file and set safe_mode to off
 
-//list available drush packages: 
-sudo pear remote-list -c drush
-
 //drush should be installed at: /usr/share/php/drush
 
 /*
@@ -35,3 +35,4 @@ sudo drush dl drush_cleanup
 sudo mv ~/.drush/drush_cleanup ./
 cd ~
 */
+
