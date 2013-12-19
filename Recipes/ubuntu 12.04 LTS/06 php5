@@ -29,14 +29,23 @@ sudo make test
 //fpm/pool.d
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-cd /etc/php5/fpm
-sudo rm -rf pool.d
-sudo git clone https://github.com/VisualFox/php5-fpm-pool.git
-sudo ln -s php5-fpm-pool pool.d
-cd ~
+sudo vi /etc/php5/fpm/pool.d/www.conf
 
-#for log
-sudo mkdir /var/log/fpm-php
+;listen = 127.0.0.1:9000
+listen = /var/run/php5-fpm.sock
+
+php_flag[display_errors] = on
+php_admin_value[memory_limit] = 128M
+php_admin_value[max_execution_time] = 90
+
+sudo vi /etc/php5/fpm/php.ini
+
+max_execution_time = 90
+post_max_size = 16M
+upload_max_filesize = 16M
+default_socket_timeout = 90
+
+service php5-fpm restart
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 //check php module in /etc/php5/fpm/conf.d
@@ -66,4 +75,4 @@ extension=apc.so
 
 
 //restart php
-sudo /etc/init.d/php5-fpm restart
+sudo service php5-fpm restart
